@@ -56,6 +56,10 @@
 
 > See my progress ➡️ [here](https://github.com/users/deep5050/projects/5)
 
+🎊🎊 For developer's guides and detailed architecture refer to this wiki: https://deepwiki.com/deep5050/radio-active
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/deep5050/radio-active)
+
 ### Why radioactive?
 
 While there are various CLI-based radio players like [PyRadio](https://github.com/coderholic/pyradio) and [TERA](https://github.com/shinokada/tera), Radioactive stands out for its simplicity. It's designed to work seamlessly right from the start. You don't need to be a hardcore Linux or Vim expert to enjoy radio stations with Radioactive. The goal of Radioactive is to offer a straightforward user interface that's easy to grasp and comes preconfigured, without unnecessary complexities.
