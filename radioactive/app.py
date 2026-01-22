@@ -6,8 +6,6 @@
 
 import json
 
-import requests
-
 
 class App:
     def __init__(self):
@@ -28,6 +26,8 @@ class App:
         """
 
         try:
+            import requests
+
             remote_data = requests.get(self.pypi_api)
             remote_data = remote_data.content.decode("utf8")
             remote_data = json.loads(remote_data)
