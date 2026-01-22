@@ -12,9 +12,19 @@ from pick import pick
 from zenlog import log
 
 try:
-    from radioactive.feature_flags import RECORDING_FEATURE
+    from radioactive.feature_flags import (
+        RECORDING_FEATURE,
+        TRACK_FEATURE,
+        SEARCH_FEATURE,
+        CYCLE_FEATURE,
+        INFO_FEATURE,
+    )
 except ImportError:
     RECORDING_FEATURE = True
+    TRACK_FEATURE = True
+    SEARCH_FEATURE = True
+    CYCLE_FEATURE = True
+    INFO_FEATURE = True
 
 # Re-export functions for backward compatibility and aggregation
 from radioactive.ui import (
@@ -252,7 +262,7 @@ def handle_listen_keypress(
                         loglevel,
                     )
 
-        if user_input in ["i", "I", "info"]:
+        if INFO_FEATURE and user_input in ["i", "I", "info"]:
             handle_show_station_info()
 
         elif user_input in ["f", "F", "fav"]:
@@ -266,13 +276,13 @@ def handle_listen_keypress(
             alias.generate_map()
             handle_favorite_table(alias)
 
-        elif user_input in ["t", "T", "track"]:
+        elif TRACK_FEATURE and user_input in ["t", "T", "track"]:
             handle_fetch_song_title(target_url)
 
         elif user_input in ["p", "P"]:
             player.toggle()
 
-        elif user_input in ["s", "S", "search"]:
+        elif SEARCH_FEATURE and user_input in ["s", "S", "search"]:
             if handler:
                 try:
                     query = input("Enter station name to search: ")
@@ -304,7 +314,7 @@ def handle_listen_keypress(
             else:
                 log.warning("Search unavailable (handler not initialized)")
 
-        elif user_input in ["c", "C", "cycle"]:
+        elif CYCLE_FEATURE and user_input in ["c", "C", "cycle"]:
             if station_list and handler:
                 # Find current index
                 current_uuid = global_current_station_info.get("stationuuid")
@@ -353,13 +363,17 @@ def handle_listen_keypress(
 
         elif user_input in ["h", "H", "?", "help"]:
             log.info("p: Play/Pause current station")
-            log.info("t/track: Current track info")
-            log.info("i/info: Station information")
+            if TRACK_FEATURE:
+                log.info("t/track: Current track info")
+            if INFO_FEATURE:
+                log.info("i/info: Station information")
             if RECORDING_FEATURE:
                 log.info("r/record: Record a station")
                 log.info("rf/recordfile: Specify a filename for the recording")
             log.info("f/fav: Add station to favorite list")
-            log.info("s/search: Search for a new station")
-            log.info("c/cycle: Cycle to next station in search results")
+            if SEARCH_FEATURE:
+                log.info("s/search: Search for a new station")
+            if CYCLE_FEATURE:
+                log.info("c/cycle: Cycle to next station in search results")
             log.info("h/help/?: Show this help message")
             log.info("q/quit: Quit radioactive")
