@@ -263,6 +263,20 @@ filetype = mp3
 player = ffplay
 ```
 
+### Configuration Paths
+
+`radio-active` follows the XDG Base Directory specification:
+
+- **Configuration** (including `config.ini` and `alias_map`):
+  - Linux/Mac: `$XDG_CONFIG_HOME/radio-active` (defaults to `~/.config/radio-active`)
+  - Windows: `%XDG_CONFIG_HOME%/radio-active` (defaults to `~/.config/radio-active` if not set)
+
+- **Data** (including `last-station`):
+  - Linux/Mac: `$XDG_DATA_HOME/radio-active` (defaults to `~/.local/share/radio-active`)
+  - Windows: `%XDG_DATA_HOME%/radio-active` (defaults to `~/.local/share/radio-active` if not set)
+
+Legacy configuration files in `~/.radio-active-configs.ini`, `~/.radio-active-alias`, and `~/.radio-active-last-station` will be automatically migrated to the new locations on first run.
+
 > [!WARNING]
 > Do NOT modify the keys, only change the values. you can give any absolute or relative path as filepath.
 

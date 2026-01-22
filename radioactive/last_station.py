@@ -17,11 +17,8 @@ class Last_station:
     """
 
     def __init__(self):
-        self.last_station_path = None
-
-        self.last_station_path = os.path.join(
-            os.path.expanduser("~"), ".radio-active-last-station"
-        )
+        from radioactive.paths import get_last_station_path
+        self.last_station_path = get_last_station_path()
 
     def get_info(self):
         try:

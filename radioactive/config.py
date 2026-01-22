@@ -24,11 +24,10 @@ def write_a_sample_config_file():
         "player": "ffplay",
     }
 
-    # Get the user's home directory
-    home_directory = os.path.expanduser("~")
+    from radioactive.paths import get_config_path
 
     # Specify the file path
-    file_path = os.path.join(home_directory, ".radio-active-configs.ini")
+    file_path = get_config_path()
 
     try:
         # Write the configuration to the file
@@ -43,9 +42,8 @@ def write_a_sample_config_file():
 
 class Configs:
     def __init__(self):
-        self.config_path = os.path.join(
-            os.path.expanduser("~"), ".radio-active-configs.ini"
-        )
+        from radioactive.paths import get_config_path
+        self.config_path = get_config_path()
 
     def load(self):
         self.config = configparser.ConfigParser()
