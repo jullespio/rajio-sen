@@ -19,6 +19,8 @@ def write_a_sample_config_file() -> None:
     # Create a ConfigParser object
     config = configparser.ConfigParser()
 
+    from radioactive.paths import get_recordings_path
+
     # Add sections and key-value pairs
     config["AppConfig"] = {
         "loglevel": "info",
@@ -26,7 +28,7 @@ def write_a_sample_config_file() -> None:
         "sort": "votes",
         "filter": "none",
         "volume": "80",
-        "filepath": "/home/{user}/recordings/radioactive/",
+        "filepath": get_recordings_path(),
         "filetype": "mp3",
         "player": "ffplay",
     }
@@ -83,9 +85,9 @@ class Configs:
             options["sort"] = get_option("sort", "votes")
             options["filter"] = get_option("filter", "none")
             options["limit"] = get_option("limit", "100")
-            options["filepath"] = get_option(
-                "filepath", "/home/{user}/recordings/radioactive/"
-            )
+            from radioactive.paths import get_recordings_path
+
+            options["filepath"] = get_option("filepath", get_recordings_path())
 
             # if filepath has any placeholder, replace {user} to actual user map
             if "{user}" in options["filepath"]:

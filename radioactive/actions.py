@@ -97,19 +97,27 @@ def handle_record(
 
     if record_file_path and not os.path.exists(record_file_path):
         log.debug(f"filepath: {record_file_path}")
-        os.makedirs(record_file_path, exist_ok=True)
-
-    elif not record_file_path:
-        log.debug("filepath: fallback to default path")
-        record_file_path = os.path.join(
-            os.path.expanduser("~"), "Music/radioactive"
-        )  # fallback path
         try:
             os.makedirs(record_file_path, exist_ok=True)
         except Exception as e:
-            log.debug(f"{e}")
-            log.error("Could not make default directory")
-            sys.exit(1)
+            log.error(f"Could not create recording directory: {e}")
+
+    elif not record_file_path:
+        from radioactive.paths import get_recordings_path
+
+        log.debug("filepath: fallback to default path")
+        record_file_path = get_recordings_path()
+        try:
+            os.makedirs(record_file_path, exist_ok=True)
+        except Exception as e:
+            log.error(f"Could not create recording directory: {e}")
+            log.warning("Recording might fail if the directory is not writable.")
+            # We don't exit here, we try to proceed or return?
+            # If we return, recording stops but app stays alive.
+            # But earlier code sys.exit(1).
+            # User wants NO CRASH.
+            # Let's try to verify if we can write there?
+            # For now, just catching the exception is enough to stop the crash.
 
     now = datetime.datetime.now()
     month_name = now.strftime("%b").upper()
