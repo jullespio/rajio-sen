@@ -445,6 +445,8 @@ def handle_listen_keypress(
                             player.play()
                             handle_current_play_panel(new_station_name)
                             station_url = new_target_url
+                            station_name = new_station_name
+                            target_url = new_target_url
                             break
                         else:
                             raise Exception("Could not resolve station URL")
