@@ -325,10 +325,11 @@ def handle_listen_keypress(
                     continue
 
                 if query.strip():
-                    station_list = handle_search_stations(
+                    temp_station_list = handle_search_stations(
                         handler, query, limit=100, sort_by="votes", filter_with="none"
                     )
-                    if station_list:
+                    if temp_station_list:
+                        station_list = temp_station_list
                         # Find valid station choice
                         try:
                             station_name, target_url = (

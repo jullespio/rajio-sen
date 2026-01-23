@@ -76,7 +76,8 @@ def print_table(
 
     if not response:
         log.error("No stations found")
-        sys.exit(1)
+        # sys.exit(1)
+        return []
 
     # Apply filtering if needed
     if filter_expression.lower() != "none":
@@ -84,7 +85,8 @@ def print_table(
 
         if not response:
             log.error("No stations found after filtering")
-            sys.exit(1)
+            # sys.exit(1)
+            return []
     else:
         log.debug("Not filtering")
 
@@ -129,7 +131,8 @@ def print_table(
         return response
     else:
         log.info("No stations found")
-        sys.exit(0)
+        # Do not exit if no stations found, just return empty
+        return []
 
 
 class Handler:
