@@ -6,10 +6,12 @@ from zenlog import log
 
 class Alias:
     def __init__(self):
+        from radioactive.paths import get_alias_path
+
         self.alias_map = []
         self.found = False
 
-        self.alias_path = os.path.join(os.path.expanduser("~"), ".radio-active-alias")
+        self.alias_path = get_alias_path()
 
     def write_stations(self, station_map):
         """Write stations file from generated map"""

@@ -1,12 +1,21 @@
+from typing import Dict, Any, Optional
+
 from zenlog import log
 
 from radioactive.args import Parser
 
 
-def parse_options():
+def parse_options() -> Dict[str, Any]:
+    """
+    Parse command-line arguments and return a dictionary of options.
+
+    Returns:
+        dict: A dictionary containing all the parsed options and their values.
+    """
     parser = Parser()
     args = parser.parse()
-    options = {}
+    options: Dict[str, Any] = {}
+
     # ----------------- all the args ------------- #
     options["version"] = args.version
     options["show_help_table"] = args.help
@@ -17,14 +26,14 @@ def parse_options():
         log.level(options["loglevel"])
     else:
         log.level("info")
-        log.warning("Correct log levels are: error,warning,info(default),debug")
+        log.warning("Correct log levels are: error, warning, info(default), debug")
 
     # check is limit is a valid integer
     limit = args.limit
     options["limit"] = int(limit) if limit else 100
     log.debug("limit is set to: {}".format(limit))
 
-    options["search_station_name"] = args.search_station_name
+    options["search_station_name"] = getattr(args, "search_station_name", None)
     options["search_station_uuid"] = args.search_station_uuid
 
     options["play_last_station"] = args.play_last_station
@@ -48,10 +57,10 @@ def parse_options():
 
     options["kill_ffplays"] = args.kill_ffplays
 
-    options["record_stream"] = args.record_stream
-    options["record_file"] = args.record_file
-    options["record_file_format"] = args.record_file_format
-    options["record_file_path"] = args.record_file_path
+    options["record_stream"] = getattr(args, "record_stream", False)
+    options["record_file"] = getattr(args, "record_file", "")
+    options["record_file_format"] = getattr(args, "record_file_format", "mp3")
+    options["record_file_path"] = getattr(args, "record_file_path", "")
 
     options["target_url"] = ""
     options["volume"] = args.volume

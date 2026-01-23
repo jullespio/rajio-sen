@@ -3,14 +3,13 @@
     it needs to be updated in every release)
     and to check if an updated version available for the app or not
 """
-import json
 
-import requests
+import json
 
 
 class App:
     def __init__(self):
-        self.__VERSION__ = "2.9.1"  # change this on every update #
+        self.__VERSION__ = "3.0.0"  # change this on every update #
         self.pypi_api = "https://pypi.org/pypi/radio-active/json"
         self.remote_version = ""
 
@@ -27,6 +26,8 @@ class App:
         """
 
         try:
+            import requests
+
             remote_data = requests.get(self.pypi_api)
             remote_data = remote_data.content.decode("utf8")
             remote_data = json.loads(remote_data)

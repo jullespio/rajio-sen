@@ -51,6 +51,7 @@
 - [x] Discovers stations by language
 - [x] VLC, MPV player support
 - [x] Default config file
+- [x] Sleep Timer (pomodoro) ⏲️
 - [ ] I'm feeling lucky! Play Random stations
 
 
@@ -144,7 +145,7 @@ Search a station with `radio --search [STATION_NAME]` or simply `radio` :zap: to
 | `--uuid`, `-U`     | Optional | ID of the station                              | None          |                        |
 | `--record` , `-R`  | Optional | Record a station and save to file              | False         |                        |
 | `--filename`, `-N` | Optional | Filename to used to save the recorded audio    | None          |                        |
-| `--filepath`       | Optional | Path to save the recordings                    | <DEFAULT_DIR> |                        |
+| `--filepath`       | Optional | Path to save the recordings                    | `~/radioactive/recordings` |                        |
 | `--filetype`, `-T` | Optional | Format of the recording                        | mp3           | `mp3`,`auto`           |
 | `--last`           | Optional | Play last played station                       | False         |                        |
 | `--random`         | Optional | Play a random station from favorite list       | False         |                        |
@@ -185,7 +186,7 @@ Search a station with `radio --search [STATION_NAME]` or simply `radio` :zap: to
 
 > `--filetype`: Specify the extension of the final recording file. default is `mp3`. you can provide `-T auto` to autodetect the codec and set file extension accordingly (in original form).
 
-> DEFAULT_DIR: is `/home/user/Music/radioactive`
+
 
 ### Runtime Commands
 
@@ -197,6 +198,9 @@ Enter a command to perform an action: ?
 t/T/track: Current song name (track info)
 r/R/record: Record a station
 f/F/fav: Add station to favorite list
+s/S/search: Search for a new station
+n/N/next: Play next station from search results or favorite list
+timer/sleep: Set a sleep timer (duration in minutes)
 rf/RF/recordfile: Specify a filename for the recording.
 h/H/help/?: Show this help message
 q/Q/quit: Quit radioactive
@@ -258,13 +262,23 @@ limit = 100
 sort = votes
 filter = none
 volume = 80
-filepath = /home/{user}/recordings/radioactive/
+filepath = /home/{user}/radioactive/recordings/
 filetype = mp3
 player = ffplay
 ```
 
+### Configuration Paths
+All the data files are stored in a folder called `radioactive` under your user home directory.
+
+- **Configuration**:  `~/radioactive/config.ini`
+- **Favorites**: `~/radioactive/alias_map`
+- **Last Station**: `~/radioactive/last_station`
+- **Recordings**: `~/radioactive/recordings`
+
+Legacy configuration files are automatically migrated to this new location on the first run.
+
 > [!WARNING]
-> Do NOT modify the keys, only change the values. you can give any absolute or relative path as filepath.
+> Do NOT modify the keys, only change the values.
 
 ### Bonus Tips
 
@@ -282,7 +296,7 @@ see [CHANGELOG](./CHANGELOG.md)
 
 Share you favorite list with our community 🌐 ➡️ [Here](https://github.com/deep5050/radio-active/discussions/10)
 
-> Your favorite list `.radio-active-alias` is under your home directory as a hidden file :)
+> Your favorite list `alias_map` is under `~/radioactive/` directory.
 
 
 ### Support
