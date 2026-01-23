@@ -39,7 +39,7 @@ from radioactive.ui import (
     handle_show_station_info,
     handle_current_play_panel,
     set_global_station_info,
-    global_current_station_info,
+    get_global_station_info,
 )
 
 from radioactive.actions import (
@@ -349,52 +349,118 @@ def handle_listen_keypress(
             else:
                 log.warning("Search unavailable (handler not initialized)")
 
-        elif CYCLE_FEATURE and user_input in ["c", "C", "cycle"]:
-            if station_list and handler:
+        elif CYCLE_FEATURE and user_input in ["n", "N", "next"]:
+            target_list = []
+            source_type = ""
+
+            # Prioritize search results if available
+            if station_list and len(station_list) > 0:
+                target_list = station_list
+                source_type = "search"
+            elif alias and alias.alias_map:
+                target_list = alias.alias_map
+                source_type = "favorite"
+
+            if target_list:
                 # Find current index
-                current_uuid = global_current_station_info.get("stationuuid")
+                current_info = get_global_station_info()
+                current_uuid = current_info.get("stationuuid")
+                current_url = current_info.get("url")  # for direct URLs
+
                 current_index = -1
-                for idx, st in enumerate(station_list):
-                    if st.get("stationuuid") == current_uuid:
-                        current_index = idx
-                        break
+
+                # Try to find current station in the target list
+                for idx, st in enumerate(target_list):
+                    if source_type == "search":
+                        if st.get("stationuuid") == current_uuid:
+                            current_index = idx
+                            break
+                    elif source_type == "favorite":
+                        # Favorites use uuid_or_url
+                        val = st.get("uuid_or_url")
+                        # Check against both uuid and url to be safe
+                        if val == current_uuid or val == current_url:
+                            current_index = idx
+                            break
+                        # Also check name as fallback
+                        if st.get("name") == current_info.get("name"):
+                            current_index = idx
+                            break
 
                 # Next index
-                next_index = (current_index + 1) % len(station_list)
+                next_index = (current_index + 1) % len(target_list)
 
                 # Try to play next valid station
-                # We loop until we find one that works or we exhaust list
                 attempts = 0
-                max_attempts = len(station_list)
+                max_attempts = len(target_list)
 
                 while attempts < max_attempts:
-                    target_station = station_list[next_index]
-                    set_global_station_info(target_station)
+                    target_station = target_list[next_index]
                     log.info(f"Switching to: {target_station.get('name')}")
 
-                    try:
-                        station_name, target_url = handle_station_uuid_play(
-                            handler, target_station["stationuuid"]
-                        )
-                        player.stop()
-                        player.url = target_url
-                        player.play()
+                    # Determine how to play based on available info
+                    # We need to simulate the "Selection" logic
 
-                        # Check if successful (basic check)
-                        # The player runs in threads, so strict check is hard, but we can trust if it didn't error immediately
-                        handle_current_play_panel(station_name)
-                        station_url = target_url
-                        break
+                    try:
+                        new_station_name = ""
+                        new_target_url = ""
+
+                        if source_type == "search":
+                            # It's a full station object
+                            set_global_station_info(target_station)
+                            new_station_name, new_target_url = handle_station_uuid_play(
+                                handler, target_station["stationuuid"]
+                            )
+                        else:
+                            # Favorite entry: {'name':..., 'uuid_or_url':...}
+                            # Construct a temporary info object for global state
+                            uuid_or_url = target_station["uuid_or_url"]
+
+                            temp_info = {
+                                "name": target_station["name"],
+                                "uuid_or_url": uuid_or_url,
+                                # We might not know if it is a UUID or URL yet for sure without helper,
+                                # but let's try to populate what we can
+                            }
+
+                            if "://" in uuid_or_url:
+                                # Direct URL
+                                temp_info["url"] = uuid_or_url
+                                set_global_station_info(temp_info)
+                                new_station_name = target_station["name"]
+                                new_target_url = uuid_or_url
+                                # Allow direct play without UUID handler
+                            else:
+                                # UUID
+                                temp_info["stationuuid"] = uuid_or_url
+                                set_global_station_info(temp_info)
+                                new_station_name, new_target_url = (
+                                    handle_station_uuid_play(handler, uuid_or_url)
+                                )
+
+                        # Check if we have a URL to play
+                        if new_target_url:
+                            player.stop()
+                            player.url = new_target_url
+                            player.play()
+                            handle_current_play_panel(new_station_name)
+                            station_url = new_target_url
+                            break
+                        else:
+                            raise Exception("Could not resolve station URL")
+
                     except Exception as e:
                         log.error(f"Failed to play {target_station.get('name')}: {e}")
-                        next_index = (next_index + 1) % len(station_list)
+                        next_index = (next_index + 1) % len(target_list)
                         attempts += 1
 
                 if attempts >= max_attempts:
                     log.error("Could not play any station from the list")
 
             else:
-                log.warning("Cycle unavailable (no search results to cycle through)")
+                log.warning(
+                    "Cycle/Next unavailable (no search results or favorites to cycle through)"
+                )
 
         elif user_input in ["h", "H", "?", "help"]:
             log.info("p: Play/Pause current station")
@@ -409,7 +475,9 @@ def handle_listen_keypress(
             if SEARCH_FEATURE:
                 log.info("s/search: Search for a new station")
             if CYCLE_FEATURE:
-                log.info("c/cycle: Cycle to next station in search results")
+                log.info(
+                    "n/next: Play result from next station searching or favorite list"
+                )
             if TIMER_FEATURE:
                 log.info("timer/sleep: Set a sleep timer")
             log.info("h/help/?: Show this help message")

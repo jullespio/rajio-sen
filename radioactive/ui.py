@@ -120,3 +120,9 @@ def set_global_station_info(info: dict) -> None:
     """Helper to update global station info from other modules."""
     global global_current_station_info
     global_current_station_info = info
+
+
+def get_global_station_info() -> dict:
+    """Helper to get global station info."""
+    global global_current_station_info
+    return global_current_station_info
