@@ -1,8 +1,9 @@
 """
-UI components for radio-active using Rich.
+UI components for Rajio-Sen using Rich.
+Vaporwave / Minimalist Edition
 """
 
-from rich import print
+from rich import print, box
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -10,108 +11,113 @@ from rich.text import Text
 from zenlog import log
 
 # Global variable to store current station info for display
-# This is shared state, ideally should be managed better, but keeping for compatibility
 global_current_station_info = {}
 
 
 def handle_welcome_screen() -> None:
-    """Print the welcome screen panel."""
+    """Print the Rajio-Sen boot screen panel."""
     welcome = Panel(
         """
-        :radio: Play any radios around the globe right from this Terminal [yellow]:zap:[/yellow]!
-        :smile: Author: Dipankar Pal
-        :question: Type '--help' for more details on available commands
-        :bug: Visit: https://github.com/deep5050/radio-active to submit issues
-        :star: Show some love by starring the project on GitHub [red]:heart:[/red]
-        :dollar: You can donate me at https://deep5050.github.io/payme/
-        :x: Press Ctrl+C to quit
+ [#C9B9E5]ＮＥＯ - ＴＯＫＹＯ ＡＵＤＩＯ ＳＹＮＤＩＣＡＴＥ[/]
+ [#00FFFF]接続を確立しています...[/]  (Establishing connection...)
+
+ [#4E3F61]=====================================================[/]
+
+ [#C9B9E5]コマンド (ＨＥＬＰ)[/] : --help
+ [#C9B9E5]終了 (ＥＸＩＴ)[/]     : Ctrl+C
         """,
-        title="[b]RADIOACTIVE[/b]",
+        title="[b #00FFFF] ラジオ船 ( ＲＡＪＩＯ - ＳＥＮ ) [/]",
         width=85,
         expand=True,
-        safe_box=True,
+        box=box.MINIMAL,
+        border_style="#4E3F61"
     )
     print(welcome)
 
 
 def handle_update_screen(app) -> None:
-    """
-    Check for updates and print a message if available.
-
-    Args:
-        app: The App instance to check for updates.
-    """
+    """Check for updates and print a HUD message if available."""
     if app.is_update_available():
         update_msg = (
-            "\t[blink]An update available, run [green][italic]pip install radio-active=="
-            + app.get_remote_version()
-            + "[/italic][/green][/blink]\nSee the changes: https://github.com/deep5050/radio-active/blob/main/CHANGELOG.md"
+            "\n\t[blink #00FFFF]［ 新着アップデート ］ ＵＰＤＡＴＥ ＡＶＡＩＬＡＢＬＥ[/]\n"
+            f"\t[#C9B9E5]バージョン (ＶＥＲＳＩＯＮ):[/] {app.get_remote_version()}\n"
+            "\t[#4E3F61]Execute: git pull origin main[/]\n"
         )
         update_panel = Panel(
             update_msg,
             width=85,
+            box=box.MINIMAL,
+            border_style="#00FFFF"
         )
         print(update_panel)
     else:
-        log.debug("Update not available")
+        log.debug("System up to date.")
 
 
 def handle_favorite_table(alias) -> None:
-    """
-    Print the user's favorite list in a table.
-
-    Args:
-        alias: The Alias instance containing the favorite map.
-    """
+    """Print the user's favorite list in a minimalist table."""
     table = Table(
         show_header=True,
-        header_style="bold magenta",
+        header_style="bold #C9B9E5",
         min_width=85,
-        safe_box=False,
+        box=box.SIMPLE,
+        border_style="#4E3F61",
         expand=True,
     )
-    table.add_column("Station", justify="left")
-    table.add_column("URL / UUID", justify="left")
+    table.add_column("放送局 (ＳＴＡＴＩＯＮ)", justify="left")
+    table.add_column("周波数 (ＵＲＬ / ＵＵＩＤ)", justify="left")
 
     if len(alias.alias_map) > 0:
         for entry in alias.alias_map:
-            table.add_row(entry["name"], entry["uuid_or_url"])
+            table.add_row(
+                f"[#C9B9E5]{entry['name']}[/]", 
+                f"[#4E3F61]{entry['uuid_or_url']}[/]"
+            )
         print(table)
-        log.info(f"Your favorite stations are saved in {alias.alias_path}")
+        log.info(f"Saved frequencies located in {alias.alias_path}")
     else:
-        log.info("You have no favorite station list")
+        log.info("[ 空白 ] You have no saved stations.")
 
 
 def handle_show_station_info() -> None:
     """Show important information regarding the current station."""
-    # pylint: disable=global-statement
     global global_current_station_info
-    custom_info = {}
-    try:
-        custom_info["name"] = global_current_station_info.get("name")
-        custom_info["uuid"] = global_current_station_info.get("stationuuid")
-        custom_info["url"] = global_current_station_info.get("url")
-        custom_info["website"] = global_current_station_info.get("homepage")
-        custom_info["country"] = global_current_station_info.get("country")
-        custom_info["language"] = global_current_station_info.get("language")
-        custom_info["tags"] = global_current_station_info.get("tags")
-        custom_info["codec"] = global_current_station_info.get("codec")
-        custom_info["bitrate"] = global_current_station_info.get("bitrate")
-        print(custom_info)
-    except Exception as e:
-        log.error(f"No station information available: {e}")
+    
+    if not global_current_station_info:
+        log.error("[ 空白 ] No telemetry available.")
+        return
+
+    # Formatting the raw data into a clean readout
+    info_text = (
+        f"[#C9B9E5]ID:[/]      {global_current_station_info.get('stationuuid', 'N/A')}\n"
+        f"[#C9B9E5]NAME:[/]    {global_current_station_info.get('name', 'N/A')}\n"
+        f"[#C9B9E5]COUNTRY:[/] {global_current_station_info.get('country', 'N/A')}\n"
+        f"[#C9B9E5]TAGS:[/]    {global_current_station_info.get('tags', 'N/A')}\n"
+        f"[#C9B9E5]CODEC:[/]   {global_current_station_info.get('codec', 'N/A')} @ {global_current_station_info.get('bitrate', '0')}kbps\n"
+        f"[#4E3F61]URL:[/]      {global_current_station_info.get('url', 'N/A')}"
+    )
+    
+    info_panel = Panel(
+        info_text,
+        title="[#00FFFF] データ (ＴＥＬＥＭＥＴＲＹ) [/]",
+        width=85,
+        box=box.MINIMAL,
+        border_style="#4E3F61"
+    )
+    print(info_panel)
 
 
 def handle_current_play_panel(curr_station_name: str = "") -> None:
-    """
-    Print the currently playing station panel.
+    """Print the currently playing station panel."""
+    panel_station_name = Text(f"► 再生中 : {curr_station_name}", justify="center", style="bold #C9B9E5")
 
-    Args:
-        curr_station_name (str): Name of the station.
-    """
-    panel_station_name = Text(curr_station_name, justify="center")
-
-    station_panel = Panel(panel_station_name, title="[blink]:radio:[/blink]", width=85)
+    station_panel = Panel(
+        panel_station_name, 
+        title="[blink #00FFFF] ＯＮ ＡＩＲ [/]", 
+        width=85,
+        box=box.MINIMAL,
+        border_style="#4E3F61"
+    )
     console = Console()
     console.print(station_panel)
 
