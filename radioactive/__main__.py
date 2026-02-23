@@ -126,7 +126,7 @@ def main():
     # --------------- app logic starts here ------------------- #
 
     if options["version"]:
-        log.info("RADIO-ACTIVE : version {}".format(VERSION))
+        log.info("RAJIO-SEN (ラジオ船) : version {}".format(VERSION))
         sys.exit(0)
 
     handle_welcome_screen()
