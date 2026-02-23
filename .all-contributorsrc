@@ -6,6 +6,17 @@
   "commit": false,
   "contributors": [
     {
+      "login": "jullespio",
+      "name": "Julles",
+      "avatar_url": "https://github.com/jullespio.png",
+      "profile": "https://github.com/jullespio",
+      "contributions": [
+        "code",
+        "design",
+        "ideas"
+      ]
+    },
+    {
       "login": "Yasumoto",
       "name": "Joe Smith",
       "avatar_url": "https://avatars.githubusercontent.com/u/48383?v=4",
@@ -37,8 +48,8 @@
     }
   ],
   "contributorsPerLine": 7,
-  "projectName": "radio-active",
-  "projectOwner": "deep5050",
+  "projectName": "rajio-sen",
+  "projectOwner": "jullespio",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true,

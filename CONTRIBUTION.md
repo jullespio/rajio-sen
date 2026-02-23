@@ -1,52 +1,58 @@
-# Contribution Guide
+# ＣＯＮＴＲＩＢＵＴＩＯＮ ＧＵＩＤＥ (寄稿ガイド)
 
-Welcome to the radio-active project! We're thrilled that you want to contribute. Before you get started, please take a moment to read this guide to understand our contribution process.
+Welcome to the **Rajio-Sen (ラジオ船)** project! We're thrilled that you want to help keep the pirate frequency alive. Before you start hacking the signal, please review these directives.
 
+## ＧＥＴＴＩＮＧ ＳＴＡＲＴＥＤ (準備)
 
-## Getting Started
+Ensure your station is equipped with the following:
+* **Git**: To track your modifications.
+* **Python 3.6+**: The ship's primary core.
+* **FFmpeg**: Essential for the sub-space audio relay.
 
-To get started, make sure you have `git`, `ffmpeg` and `python3` installed on your local machine. You'll also need a GitHub account.
+## ＨＯＷ ＴＯ ＣＯＮＴＲＩＢＵＴＥ (貢献方法)
 
-## How to Contribute
+### １. Ｆｏｒｋ ｔｈｅ Ｒｅｐｏｓｉｔｏｒｙ
+Click the **Fork** button on the top right of the [jullespio/rajio-sen](https://github.com/jullespio/rajio-sen) page.
 
-### Fork the Repository
-
-1. Click the "Fork" button on the top right of this repository's page.
-2. This will create a copy of the repository in your GitHub account.
-
-### Clone Your Fork
-
-1. Clone your fork to your local machine using the following command:
-   ```bash
-    git clone https://github.com/deep5050/radio-active.git
-    git checkout -b your-branch-name
-   ```
-
-### Install dependencies
+### ２. Ｃｌｏｎｅ Ｙｏｕｒ Ｆｏｒｋ
 ```bash
-pip3 install -r requirements.txt
-pip3 install -r requirements-dev.txt
+git clone [https://github.com/YOUR_USERNAME/rajio-sen.git](https://github.com/YOUR_USERNAME/rajio-sen.git)
+cd rajio-sen
+git checkout -b feature/your-new-signal
 ```
 
-### Make changes.
+### ３. Ｉｎｓｔａｌｌ Ｄｅｐｅｎｄｅｎｃｉｅｓ
+For local development and testing, initialize a virtual environment and install the package in editable mode. This ensures all requirements are met and the rajio command is linked to your shell.
+```bash
+python -m venv venv
+source venv/bin/activate  # Or venv\Scripts\activate on Windows
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+```
 
-Modify the code as required
+### ４. Ｍａｋｅ Ｃｈａｎｇｅｓ
+Modify the hull and engine room as required. Keep the code clean and follow the **minimalist/vaporwave aesthetic** guidelines established for the UI.
 
-### Test Your Changes
+### ５. Ｔｅｓｔ Ｙｏｕｒ Ｃｈａｎｇｅｓ
+Before pushing back to the mothership, ensure the signal is stable. Use the editable installation to test the `rajio` command:
+```bash
+pip install -e .
+rajio --search "vaporwave"
+```
 
-Before submitting your changes, please ensure that your code doesn't break the existing functionality.
+### ６. Ｃｏｍｍｉｔ ＆ Ｐｕｓｈ
+We follow a structured log format for ship's records.
+```bash
+git add .
+git commit -s -m "feat(ui): Add new neon glow to the HUD"
+git push origin feature/your-new-signal
+```
 
-Run `make` to install it locally and test before you push changes!
+### ７. Ｃｒｅａｔｅ ａ Ｐｕｌｌ Ｒｅｑｕｅｓｔ
+Visit the repository on GitHub. Submit your transmission to the `jullespio/rajio-sen` repository. Provide a detailed description of your structural refit in the PR logs.
 
-   ```
-   git add .
-   git commit -m "Add your commit message here" --signoff
-   git push
-   ```
-### Create a Pull Request
-Visit the original repository on GitHub.
-You should see a "New Pull Request" button. Click on it.
-Follow the instructions to create your pull request.
+---
 
-Fill the description section with meaningful message.
-
+<div align=center>
+<p align=center> ＯＦＦ－ＧＲＩＤ ＮＥＴＷＯＲＫ // ＰＩＲＡＴＥ ＲＡＤＩＯ ＳＹＮＤＩＣＡＴＥ </p>
+</div>

@@ -1,5 +1,5 @@
 """
-Core logical actions for radio-active.
+Core logical actions for rajio-sen.
 """
 
 import datetime

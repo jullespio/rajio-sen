@@ -5,17 +5,13 @@ from zenlog import log
 
 
 def get_user_home():
-    """
-    Get the user's home directory in a cross-platform way.
-    """
+    """Get the user's home directory in a cross-platform way."""
     return os.path.expanduser("~")
 
 
 def get_base_dir():
     """
     Return the base directory for rajio_sen files: ~/rajio_sen
-    This acts as the central storage for config, data, and recordings
-    as per user request.
     """
     home = get_user_home()
     base_dir = os.path.join(home, "rajio_sen")
@@ -23,21 +19,16 @@ def get_base_dir():
     try:
         os.makedirs(base_dir, exist_ok=True)
     except Exception as e:
-        # If we can't create the base dir, we are in trouble,
-        # but we log it and proceed (might crash later if not handled)
         log.error(f"Could not create base directory {base_dir}: {e}")
 
     return base_dir
 
 
 def _migrate_file(legacy_path, new_path, description):
-    """
-    Migrate a file from legacy_path to new_path if it exists.
-    """
+    """Migrate a file from legacy_path to new_path if it exists."""
     if os.path.exists(legacy_path) and not os.path.exists(new_path):
-        log.info(f"Migrating {description} from {legacy_path} to {new_path}")
+        log.info(f"ＭＩＧＲＡＴＩＯＮ: Moving {description} to {new_path}")
         try:
-            # Ensure the directory exists
             os.makedirs(os.path.dirname(new_path), exist_ok=True)
             shutil.move(legacy_path, new_path)
         except Exception as e:
@@ -45,87 +36,60 @@ def _migrate_file(legacy_path, new_path, description):
 
 
 def get_config_path():
-    """
-    Get the path to the configuration file: ~/rajio_sen/config.ini
-    """
+    """Path to config.ini. Migrates from legacy dotfiles and old folder names."""
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "config.ini")
-
     home = get_user_home()
 
-    # 1. ~/.radio-active-configs.ini
-    legacy_dot_path = os.path.join(home, ".radio-active-configs.ini")
-    _migrate_file(legacy_dot_path, new_path, "config file (dotfile)")
-
-    # 2. XDG locations (from previous attempts)
-    # ~/.config/rajio_sen/config.ini
-    xdg_path_new = os.path.join(home, ".config", "rajio_sen", "config.ini")
-    _migrate_file(xdg_path_new, new_path, "config file (xdg-new)")
-
-    # ~/.config/radio-active/config.ini
-    xdg_path_old = os.path.join(home, ".config", "radio-active", "config.ini")
-    _migrate_file(xdg_path_old, new_path, "config file (xdg-old)")
+    # Legacy targets
+    _migrate_file(os.path.join(home, ".radio-active-configs.ini"), new_path, "legacy dot-config")
+    _migrate_file(os.path.join(home, "radioactive", "config.ini"), new_path, "legacy folder-config")
+    _migrate_file(os.path.join(home, ".config", "radio-active", "config.ini"), new_path, "XDG legacy config")
 
     return new_path
 
 
 def get_alias_path():
-    """
-    Get the path to the alias (favorites) file: ~/rajio_sen/alias_map
-    """
+    """Path to alias_map (favorites)."""
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "alias_map")
-
     home = get_user_home()
 
-    # 1. ~/.radio-active-alias
-    legacy_dot_path = os.path.join(home, ".radio-active-alias")
-    _migrate_file(legacy_dot_path, new_path, "alias file (dotfile)")
-
-    # 2. XDG locations
-    xdg_path_new = os.path.join(home, ".config", "rajio_sen", "alias_map")
-    _migrate_file(xdg_path_new, new_path, "alias file (xdg-new)")
-
-    xdg_path_old = os.path.join(home, ".config", "radio-active", "alias_map")
-    _migrate_file(xdg_path_old, new_path, "alias file (xdg-old)")
+    # Legacy targets
+    _migrate_file(os.path.join(home, ".radio-active-alias"), new_path, "legacy dot-alias")
+    _migrate_file(os.path.join(home, "radioactive", "alias_map"), new_path, "legacy folder-alias")
+    _migrate_file(os.path.join(home, ".config", "radio-active", "alias_map"), new_path, "XDG legacy alias")
 
     return new_path
 
 
 def get_last_station_path():
-    """
-    Get the path to the last played station file: ~/rajio_sen/last_station
-    """
+    """Path to last_station tracker."""
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "last_station")
-
     home = get_user_home()
 
-    # 1. ~/.radio-active-last_station
-    legacy_dot_path = os.path.join(home, ".radio-active-last_station")
-    _migrate_file(legacy_dot_path, new_path, "last station file (dotfile)")
-
-    # 2. XDG locations (usually in local/share, but we check config too just in case)
-    xdg_data_new = os.path.join(home, ".local", "share", "rajio_sen", "last_station")
-    _migrate_file(xdg_data_new, new_path, "last station file (xdg-new)")
-
-    xdg_data_old = os.path.join(home, ".local", "share", "radio-active", "last_station")
-    _migrate_file(xdg_data_old, new_path, "last station file (xdg-old)")
-
+    # Legacy targets
+    _migrate_file(os.path.join(home, ".radio-active-last_station"), new_path, "legacy dot-last-station")
+    _migrate_file(os.path.join(home, "radioactive", "last_station"), new_path, "legacy folder-last-station")
+    
     return new_path
 
 
 def get_recordings_path():
-    """
-    Get the path for recordings: ~/rajio_sen/recordings
-    """
+    """Path for recordings: ~/rajio_sen/recordings"""
     base_dir = get_base_dir()
     recordings_path = os.path.join(base_dir, "recordings")
+
+    # If the old recordings folder exists, we might want to move it too
+    home = get_user_home()
+    old_recordings = os.path.join(home, "radioactive", "recordings")
+    if os.path.exists(old_recordings) and not os.path.exists(recordings_path):
+         _migrate_file(old_recordings, recordings_path, "legacy recordings directory")
 
     try:
         os.makedirs(recordings_path, exist_ok=True)
     except Exception as e:
         log.error(f"Could not create recordings directory {recordings_path}: {e}")
-        # Not exiting here, hoping the caller handles it or it works next time
 
     return recordings_path

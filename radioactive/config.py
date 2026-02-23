@@ -1,5 +1,5 @@
 """
-Configuration management for radio-active.
+Configuration management for rajio-sen.
 Handles loading, saving, and managing user configurations.
 """
 

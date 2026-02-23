@@ -29,14 +29,15 @@ class Parser:
         self.defaults = load_default_configs()
 
         self.parser = argparse.ArgumentParser(
-            description="Play any radio around the globe right from the CLI ",
-            prog="radio-active",
+            description="ラジオ船 (Rajio-Sen): A minimalist vaporwave-inspired pirate radio scanner",
+            prog="rajio-sen",
             add_help=False,
         )
 
         self.parser.add_argument(
             "--version", action="store_true", dest="version", default=False
         )
+
         self.parser.add_argument(
             "--help",
             "-H",
