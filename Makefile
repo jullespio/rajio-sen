@@ -33,12 +33,14 @@ dist: clean
 	${PYTHON} setup.py sdist bdist_wheel
 
 deploy: dist
-	twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
+    @echo "PyPI deployment is disabled for the Rajio-Sen commission."
+    # twine upload --repository-url https://upload.pypi.org/legacy/ dist/*
 
+# Reserved for future local package validation
 test-deploy: dist
-	@echo "Sending to testpypi server......."
-	@twine upload -r testpypi dist/*
-
+    @echo "Package build verified. Public test-deployment is disabled."
+    # @twine upload -r testpypi dist/*
+	
 help:
 	@echo "help............."
 	@echo "    clean"
