@@ -29,8 +29,8 @@ setup(
     long_description=readme(),
     long_description_content_type="text/markdown",
     keywords="radios api internet-radio cli app vaporwave pirate-radio",
-    author="Julles",  # Commissioned by the Captain
-    author_email="YOUR_EMAIL@HERE",  # Update this for your shipyard records
+    author="ジュレス (juresu)", 
+    author_email="YOUR_EMAIL@HERE", 
     url="https://github.com/jullespio/rajio-sen",
     license="MIT",
     entry_points={

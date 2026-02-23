@@ -1,13 +1,15 @@
 {
     "python.formatting.provider": "black",
     "cSpell.words": [
-        "Dipankar",
-        "Fmepg",
-        "Popen",
+        "rajio",
+        "sen",
+        "julles",
+        "pio",
         "ffplay",
         "psutil",
-        "pyradios",
-        "stationuuid"
+        "stationuuid",
+        "zenlog",
+        "endeavouros"
     ],
     "grammarly.selectors": [
         {
@@ -17,7 +19,7 @@
     ],
     "files.autoSave": "off",
     "editor.wordWrap": "wordWrapColumn",
-    "workbench.colorTheme": "Theme Darker",
+    "workbench.colorTheme": "Experimental Dark",
     "editor.minimap.autohide": "mouseover",
     "editor.minimap.renderCharacters": false,
     "editor.experimentalWhitespaceRendering": "font",

@@ -94,7 +94,7 @@ All data files are stored in a dedicated directory under your user home path:
 
 ### ＡＣＫＮＯＷＬＥＤＧＥＭＥＮＴＳ (謝辞)
 
-*Rajio-Sen* is maintained by **Julles**. 
+*Rajio-Sen* is maintained by **ジュレス (juresu)**. 
 This project was originally forked from the excellent `radio-active` CLI built by Dipankar Pal (deep5050). The hull was stripped down, the warp core replaced, and the UI redesigned to fit a new operational profile. 
 
 <div align=center>
