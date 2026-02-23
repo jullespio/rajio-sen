@@ -1,16 +1,10 @@
-"""
-    Version of the current program, (in development mode 
-    it needs to be updated in every release)
-    and to check if an updated version available for the app or not
-"""
-
 import json
-
 
 class App:
     def __init__(self):
-        self.__VERSION__ = "3.0.0"  # change this on every update #
-        self.pypi_api = "https://pypi.org/pypi/radio-active/json"
+        self.__VERSION__ = "0.1.0"  # Increment this when you make a new release
+        # Replace YOUR_USERNAME with your actual GitHub handle
+        self.github_api = "https://api.github.com/repos/jullespio/rajio-sen/releases/latest"
         self.remote_version = ""
 
     def get_version(self):
@@ -21,19 +15,18 @@ class App:
         return self.remote_version
 
     def is_update_available(self):
-        """Checks if the user is using an outdated version of the app,
-        if any updates available inform user
-        """
-
+        """Checks if the user is using an outdated version of the app from GitHub"""
         try:
             import requests
 
-            remote_data = requests.get(self.pypi_api)
-            remote_data = remote_data.content.decode("utf8")
-            remote_data = json.loads(remote_data)
-            self.remote_version = remote_data["info"]["version"]
+            remote_data = requests.get(self.github_api, timeout=5)
+            remote_data.raise_for_status()
+            remote_data = remote_data.json()
+            
+            # GitHub tags often have a 'v' (e.g., 'v3.0.1'). We strip it for the math.
+            self.remote_version = remote_data["tag_name"].lstrip('v')
 
-            # compare two version number
+            # compare two version numbers
             tup_local = tuple(map(int, self.__VERSION__.split(".")))
             tup_remote = tuple(map(int, self.remote_version.split(".")))
 
@@ -42,4 +35,5 @@ class App:
             return False
 
         except Exception:
-            print("Could not fetch remote version number")
+            # Silently fail if offline or if you haven't published a release on GitHub yet
+            return False
