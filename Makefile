@@ -2,7 +2,7 @@ SHELL := /bin/bash
 PYTHON = python3
 TEST_PATH = ./tests/
 FLAKE8_EXCLUDE = venv,.venv,.eggs,.tox,.git,__pycache__,*.pyc,build
-SRC_DIR = "radioactive"
+SRC_DIR = "rajio_sen"
 TEST_DIR = "test"
 
 .PHONY: all clean isort check dist deploy test-deploy help build install install-dev test
@@ -77,9 +77,9 @@ test:
 
 todo:
 	@echo "Finding lines with 'TODO:' in current directory..."
-	@grep -rn 'TODO:' ./radioactive
+	@grep -rn 'TODO:' ./rajio_sen
 
 format:
 	@echo "Formatting files using black..........."
 	${PYTHON} -m black setup.py
-	${PYTHON} -m black radioactive/*
+	${PYTHON} -m black rajio_sen/*

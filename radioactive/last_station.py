@@ -16,7 +16,7 @@ class Last_station:
     """
 
     def __init__(self):
-        from radioactive.paths import get_last_station_path
+        from rajio_sen.paths import get_last_station_path
 
         self.last_station_path = get_last_station_path()
 

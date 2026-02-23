@@ -2,7 +2,7 @@ from typing import Dict, Any, Optional
 
 from zenlog import log
 
-from radioactive.args import Parser
+from rajio_sen.args import Parser
 
 
 def parse_options() -> Dict[str, Any]:

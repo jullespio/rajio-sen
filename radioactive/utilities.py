@@ -15,7 +15,7 @@ from pick import pick
 from zenlog import log
 
 try:
-    from radioactive.feature_flags import (
+    from rajio_sen.feature_flags import (
         RECORDING_FEATURE,
         TRACK_FEATURE,
         SEARCH_FEATURE,
@@ -32,7 +32,7 @@ except ImportError:
     TIMER_FEATURE = True
 
 # Re-export functions for backward compatibility and aggregation
-from radioactive.ui import (
+from rajio_sen.ui import (
     handle_welcome_screen,
     handle_update_screen,
     handle_favorite_table,
@@ -42,7 +42,7 @@ from radioactive.ui import (
     get_global_station_info,
 )
 
-from radioactive.actions import (
+from rajio_sen.actions import (
     handle_fetch_song_title,
     handle_record,
     handle_add_station,
@@ -57,7 +57,7 @@ from radioactive.actions import (
     handle_station_name_from_headers,
     handle_play_random_station,
 )
-from radioactive.ffplay import kill_background_ffplays
+from rajio_sen.ffplay import kill_background_ffplays
 
 
 RED_COLOR = "\033[91m"
@@ -484,4 +484,4 @@ def handle_listen_keypress(
             if TIMER_FEATURE:
                 log.info("timer/sleep: Set a sleep timer")
             log.info("h/help/?: Show this help message")
-            log.info("q/quit: Quit radioactive")
+            log.info("q/quit: Quit rajio_sen")

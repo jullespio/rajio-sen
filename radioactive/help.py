@@ -124,7 +124,7 @@ def show_help():
     table.add_row(
         "--filepath",
         "Path to save the recorded audio",
-        f"{user}/radioactive/recordings",
+        f"{user}/rajio_sen/recordings",
     )
 
     table.add_row(

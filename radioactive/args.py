@@ -3,10 +3,10 @@ import sys
 
 from zenlog import log
 
-from radioactive.config import Configs
+from rajio_sen.config import Configs
 
 try:
-    from radioactive.feature_flags import RECORDING_FEATURE, SEARCH_FEATURE
+    from rajio_sen.feature_flags import RECORDING_FEATURE, SEARCH_FEATURE
 except ImportError:
     RECORDING_FEATURE = True
     SEARCH_FEATURE = True
@@ -205,7 +205,7 @@ class Parser:
             action="store_true",
             dest="kill_ffplays",
             default=False,
-            help="kill all the ffplay process initiated by radioactive",
+            help="kill all the ffplay process initiated by rajio_sen",
         )
 
         if RECORDING_FEATURE:

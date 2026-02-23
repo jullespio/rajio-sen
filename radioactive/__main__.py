@@ -6,14 +6,14 @@ from time import sleep
 
 from zenlog import log
 
-from radioactive.alias import Alias
-from radioactive.app import App
-from radioactive.ffplay import Ffplay, kill_background_ffplays
-from radioactive.handler import Handler
-from radioactive.help import show_help
-from radioactive.last_station import Last_station
-from radioactive.parser import parse_options
-from radioactive.utilities import (
+from rajio_sen.alias import Alias
+from rajio_sen.app import App
+from rajio_sen.ffplay import Ffplay, kill_background_ffplays
+from rajio_sen.handler import Handler
+from rajio_sen.help import show_help
+from rajio_sen.last_station import Last_station
+from rajio_sen.parser import parse_options
+from rajio_sen.utilities import (
     check_sort_by_parameter,
     handle_add_station,
     handle_add_to_favorite,
@@ -49,14 +49,14 @@ def final_step(options, last_station, alias, handler, station_list=None):
         sys.exit(1)
 
     if options["audio_player"] == "vlc":
-        from radioactive.vlc import VLC
+        from rajio_sen.vlc import VLC
 
         vlc = VLC()
         vlc.start(options["target_url"])
         player = vlc
 
     elif options["audio_player"] == "mpv":
-        from radioactive.mpv import MPV
+        from rajio_sen.mpv import MPV
 
         mpv = MPV()
         mpv.start(options["target_url"])

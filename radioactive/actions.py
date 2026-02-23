@@ -14,14 +14,14 @@ import requests
 from zenlog import log
 
 try:
-    from radioactive.feature_flags import RECORDING_FEATURE
+    from rajio_sen.feature_flags import RECORDING_FEATURE
 except ImportError:
     # Default to True if file not found (e.g. dev mode without configure)
     RECORDING_FEATURE = True
 
 if RECORDING_FEATURE:
-    from radioactive.recorder import record_audio_auto_codec, record_audio_from_url
-from radioactive.last_station import Last_station
+    from rajio_sen.recorder import record_audio_auto_codec, record_audio_from_url
+from rajio_sen.last_station import Last_station
 
 
 def handle_fetch_song_title(url: str) -> None:
@@ -103,7 +103,7 @@ def handle_record(
             log.error(f"Could not create recording directory: {e}")
 
     elif not record_file_path:
-        from radioactive.paths import get_recordings_path
+        from rajio_sen.paths import get_recordings_path
 
         log.debug("filepath: fallback to default path")
         record_file_path = get_recordings_path()

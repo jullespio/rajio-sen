@@ -51,9 +51,9 @@ pip install -e .
 
 Search for a station and initialize the HUD:
 ```bash
-python -m radioactive --search "city pop"
+python -m rajio_sen --search "city pop"
 ```
-*(You may also use the `radio` or `radioactive` entry points depending on your environment alias setup).*
+*(You may also use the `radio` or `rajio_sen` entry points depending on your environment alias setup).*
 
 ### ＯＰＴＩＯＮＳ (設定)
 
@@ -87,10 +87,10 @@ q/Q/quit      : Quit Rajio-Sen
 
 All data files are stored in a dedicated directory under your user home path:
 
-- **Configuration**:  `~/radioactive/config.ini`
-- **Favorites**: `~/radioactive/alias_map`
-- **Last Station**: `~/radioactive/last_station`
-- **Recordings**: `~/radioactive/recordings`
+- **Configuration**:  `~/rajio_sen/config.ini`
+- **Favorites**: `~/rajio_sen/alias_map`
+- **Last Station**: `~/rajio_sen/last_station`
+- **Recordings**: `~/rajio_sen/recordings`
 
 ### ＡＣＫＮＯＷＬＥＤＧＥＭＥＮＴＳ (謝辞)
 

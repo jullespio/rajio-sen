@@ -15,10 +15,10 @@ from rich.console import Console
 from rich.table import Table
 from zenlog import log
 
-from radioactive.filter import filter_expressions
+from rajio_sen.filter import filter_expressions
 
 try:
-    from radioactive.feature_flags import MINIMAL_FEATURE
+    from rajio_sen.feature_flags import MINIMAL_FEATURE
 except ImportError:
     MINIMAL_FEATURE = False
 

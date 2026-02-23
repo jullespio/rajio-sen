@@ -13,12 +13,12 @@ def get_user_home():
 
 def get_base_dir():
     """
-    Return the base directory for radioactive files: ~/radioactive
+    Return the base directory for rajio_sen files: ~/rajio_sen
     This acts as the central storage for config, data, and recordings
     as per user request.
     """
     home = get_user_home()
-    base_dir = os.path.join(home, "radioactive")
+    base_dir = os.path.join(home, "rajio_sen")
 
     try:
         os.makedirs(base_dir, exist_ok=True)
@@ -46,7 +46,7 @@ def _migrate_file(legacy_path, new_path, description):
 
 def get_config_path():
     """
-    Get the path to the configuration file: ~/radioactive/config.ini
+    Get the path to the configuration file: ~/rajio_sen/config.ini
     """
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "config.ini")
@@ -58,8 +58,8 @@ def get_config_path():
     _migrate_file(legacy_dot_path, new_path, "config file (dotfile)")
 
     # 2. XDG locations (from previous attempts)
-    # ~/.config/radioactive/config.ini
-    xdg_path_new = os.path.join(home, ".config", "radioactive", "config.ini")
+    # ~/.config/rajio_sen/config.ini
+    xdg_path_new = os.path.join(home, ".config", "rajio_sen", "config.ini")
     _migrate_file(xdg_path_new, new_path, "config file (xdg-new)")
 
     # ~/.config/radio-active/config.ini
@@ -71,7 +71,7 @@ def get_config_path():
 
 def get_alias_path():
     """
-    Get the path to the alias (favorites) file: ~/radioactive/alias_map
+    Get the path to the alias (favorites) file: ~/rajio_sen/alias_map
     """
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "alias_map")
@@ -83,7 +83,7 @@ def get_alias_path():
     _migrate_file(legacy_dot_path, new_path, "alias file (dotfile)")
 
     # 2. XDG locations
-    xdg_path_new = os.path.join(home, ".config", "radioactive", "alias_map")
+    xdg_path_new = os.path.join(home, ".config", "rajio_sen", "alias_map")
     _migrate_file(xdg_path_new, new_path, "alias file (xdg-new)")
 
     xdg_path_old = os.path.join(home, ".config", "radio-active", "alias_map")
@@ -94,7 +94,7 @@ def get_alias_path():
 
 def get_last_station_path():
     """
-    Get the path to the last played station file: ~/radioactive/last_station
+    Get the path to the last played station file: ~/rajio_sen/last_station
     """
     base_dir = get_base_dir()
     new_path = os.path.join(base_dir, "last_station")
@@ -106,7 +106,7 @@ def get_last_station_path():
     _migrate_file(legacy_dot_path, new_path, "last station file (dotfile)")
 
     # 2. XDG locations (usually in local/share, but we check config too just in case)
-    xdg_data_new = os.path.join(home, ".local", "share", "radioactive", "last_station")
+    xdg_data_new = os.path.join(home, ".local", "share", "rajio_sen", "last_station")
     _migrate_file(xdg_data_new, new_path, "last station file (xdg-new)")
 
     xdg_data_old = os.path.join(home, ".local", "share", "radio-active", "last_station")
@@ -117,7 +117,7 @@ def get_last_station_path():
 
 def get_recordings_path():
     """
-    Get the path for recordings: ~/radioactive/recordings
+    Get the path for recordings: ~/rajio_sen/recordings
     """
     base_dir = get_base_dir()
     recordings_path = os.path.join(base_dir, "recordings")

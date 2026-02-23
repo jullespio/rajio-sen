@@ -19,7 +19,7 @@ def write_a_sample_config_file() -> None:
     # Create a ConfigParser object
     config = configparser.ConfigParser()
 
-    from radioactive.paths import get_recordings_path
+    from rajio_sen.paths import get_recordings_path
 
     # Add sections and key-value pairs
     config["AppConfig"] = {
@@ -34,7 +34,7 @@ def write_a_sample_config_file() -> None:
     }
 
     try:
-        from radioactive.paths import get_config_path
+        from rajio_sen.paths import get_config_path
 
         # Specify the file path
         file_path = get_config_path()
@@ -55,7 +55,7 @@ class Configs:
     """
 
     def __init__(self):
-        from radioactive.paths import get_config_path
+        from rajio_sen.paths import get_config_path
 
         self.config_path = get_config_path()
         self.config: Optional[configparser.ConfigParser] = None
@@ -85,7 +85,7 @@ class Configs:
             options["sort"] = get_option("sort", "votes")
             options["filter"] = get_option("filter", "none")
             options["limit"] = get_option("limit", "100")
-            from radioactive.paths import get_recordings_path
+            from rajio_sen.paths import get_recordings_path
 
             options["filepath"] = get_option("filepath", get_recordings_path())
 
@@ -104,5 +104,5 @@ class Configs:
             log.error(f"Something went wrong while parsing the config file: {e}")
             # write the example config file
             write_a_sample_config_file()
-            log.info("Re-run radioactive")
+            log.info("Re-run rajio_sen")
             sys.exit(1)

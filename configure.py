@@ -2,7 +2,7 @@
 import os
 
 CONFIG_FILE = "features.conf"
-FEATURE_FLAGS_FILE = "radioactive/feature_flags.py"
+FEATURE_FLAGS_FILE = "rajio_sen/feature_flags.py"
 
 def generate_flags():
     print(f"Generating {FEATURE_FLAGS_FILE} from {CONFIG_FILE}...")

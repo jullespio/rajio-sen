@@ -6,7 +6,7 @@ from zenlog import log
 
 class Alias:
     def __init__(self):
-        from radioactive.paths import get_alias_path
+        from rajio_sen.paths import get_alias_path
 
         self.alias_map = []
         self.found = False
