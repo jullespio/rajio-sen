@@ -7,8 +7,10 @@ import json
 import sys
 from typing import List, Optional, Union, Dict, Any
 
+import random
+import requests
+
 import requests_cache
-from pyradios import RadioBrowser
 from rich.console import Console
 from rich.table import Table
 from zenlog import log
@@ -141,20 +143,32 @@ class Handler:
     """
 
     def __init__(self):
-        self.API = None
         self.response = None
         self.target_station = None
+        
+        # Initialize the base URL by pinging the mirror network
+        self.base_url = self.discover_mirror()
 
-        # When RadioBrowser can not be initiated properly due to no internet (probably)
+    def discover_mirror(self) -> str:
+        """
+        Scan the Radio-Browser network for an active server mirror.
+        """
+        log.debug("Scanning sub-space frequencies for an active mirror...")
         try:
-            expire_after = datetime.timedelta(days=DEFAULT_CACHE_RETENTION_DAYS)
-            session = requests_cache.CachedSession(
-                cache_name="cache", backend="sqlite", expire_after=expire_after
-            )
-            self.API = RadioBrowser(session=session)
+            # The central hub that returns a JSON list of all active servers
+            response = requests.get("https://all.api.radio-browser.info/json/servers", timeout=5)
+            response.raise_for_status() # Check for HTTP errors
+            
+            servers = response.json()
+            
+            # Pick a random server from the healthy list to distribute the load
+            mirror = random.choice(servers)["name"]
+            log.debug(f"Uplink established with mirror: {mirror}")
+            
+            return f"https://{mirror}"
+            
         except Exception as e:
-            log.debug(f"Error initializing RadioBrowser: {e}")
-            log.critical("Something is wrong with your internet connection")
+            log.critical(f"Sub-space communication failure. Cannot find mirrors: {e}")
             sys.exit(1)
 
     def get_country_code(self, name: str) -> Optional[str]:
@@ -197,39 +211,41 @@ class Handler:
     def search_by_station_name(
         self, name: str, limit: int, sort_by: str, filter_with: str
     ) -> List[Dict[str, Any]]:
-        """
-        Search and play a station by its name.
-
-        Args:
-            name (str): Station name to search for.
-            limit (int): Max number of results.
-            sort_by (str): Field to sort by.
-            filter_with (str): Filter expression.
-
-        Returns:
-            list: List of found stations.
-        """
-        # Rename 'reversed' to avoid shadowing built-in
-        is_reverse = sort_by != "name"
+        
+        # In the API, to sort descending, 'reverse' is True. 
+        is_reverse = "true" if sort_by != "name" else "false"
 
         try:
-            response = self.API.search(
-                name=name,
-                name_exact=False,
-                limit=limit,
-                order=str(sort_by),
-                reverse=is_reverse,
-            )
+            # 1. Construct the exact URL for the API endpoint
+            endpoint = f"{self.base_url}/json/stations/byname/{name}"
+            
+            # 2. Define our search parameters
+            params = {
+                "limit": limit,
+                "order": sort_by,
+                "reverse": is_reverse,
+                "hidebroken": "true" # Always good to filter out dead air
+            }
+
+            # 3. Fire the request and parse the JSON nugget
+            log.debug(f"Pinging endpoint: {endpoint}")
+            req = requests.get(endpoint, params=params, timeout=10)
+            req.raise_for_status()
+            response = req.json()
+
+            # 4. Pass the clean data to the terminal UI table
             return print_table(
                 response,
                 ["Station:name@30", "Country:country@20", "Tags:tags@20"],
                 sort_by=sort_by,
                 filter_expression=filter_with,
             )
+            
         except Exception as e:
             log.debug(f"Error in search_by_station_name: {e}")
             log.error("Something went wrong. please try again.")
             sys.exit(1)
+
 
     # ------------------------- UUID ------------------------ #
     def play_by_station_uuid(self, uuid: str) -> List[Dict[str, Any]]:
