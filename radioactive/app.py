@@ -2,8 +2,7 @@ import json
 
 class App:
     def __init__(self):
-        self.__VERSION__ = "0.1.0"  # Increment this when you make a new release
-        # Replace YOUR_USERNAME with your actual GitHub handle
+        self.__VERSION__ = "0.1.0" # Increment this when you make a new release!
         self.github_api = "https://api.github.com/repos/jullespio/rajio-sen/releases/latest"
         self.remote_version = ""
 
