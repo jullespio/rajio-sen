@@ -4,3 +4,4 @@ urllib3
 psutil
 rich
 pick
+zenlog

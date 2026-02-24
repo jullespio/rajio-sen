@@ -1,7 +1,7 @@
 import os
 import shutil
 import sys
-from .zenlog import log
+from zenlog import log
 
 
 def get_user_home():

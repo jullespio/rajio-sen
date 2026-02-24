@@ -12,7 +12,7 @@ from time import sleep
 from typing import Optional, List, Any
 
 import psutil
-from .zenlog import log
+from zenlog import log
 
 
 def kill_background_ffplays() -> None:

@@ -8,7 +8,7 @@
         "ffplay",
         "psutil",
         "stationuuid",
-        ".zenlog",
+        "zenlog",
         "endeavouros"
     ],
     "grammarly.selectors": [

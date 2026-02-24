@@ -12,7 +12,7 @@ from random import randint
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import requests
-from .zenlog import log
+from zenlog import log
 from rich import print # ADDED: Rich print for UI
 
 try:

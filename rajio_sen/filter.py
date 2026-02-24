@@ -5,7 +5,7 @@ Module for filtering radio station results based on various criteria.
 import sys
 from typing import List, Dict, Any, Union
 
-from .zenlog import log
+from zenlog import log
 
 
 def _filter_entries_by_key(

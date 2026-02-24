@@ -8,7 +8,7 @@ import getpass
 import sys
 from typing import Dict, Any, Optional
 
-from .zenlog import log
+from zenlog import log
 
 
 def write_a_sample_config_file() -> None:

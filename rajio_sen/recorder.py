@@ -1,6 +1,6 @@
 import subprocess
 
-from .zenlog import log
+from zenlog import log
 
 
 def record_audio_auto_codec(input_stream_url):
