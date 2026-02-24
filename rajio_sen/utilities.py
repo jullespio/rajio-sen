@@ -40,6 +40,7 @@ from rajio_sen.ui import (
     handle_current_play_panel,
     set_global_station_info,
     get_global_station_info,
+    handle_interactive_help,
 )
 
 from rajio_sen.actions import (
@@ -65,27 +66,23 @@ END_COLOR = "\033[0m"
 
 
 def handle_station_selection_menu(handler, last_station, alias) -> Tuple[str, str]:
-    """
-    Show a selection menu for favorite stations.
-    """
-    # Add a selection list here. first entry must be the last played station
-    # try to fetch the last played station's information
+    """Show a selection menu for favorite stations."""
     last_station_info = {}
     try:
         last_station_info = last_station.get_info()
     except Exception as e:
         log.debug(f"Error: {e}")
-        # no last station??
         pass
 
-    title = "Please select a station from your favorite list:"
+    # [ NEO-TOKYO UI REFIT ]
+    title = "    ~ 登録済みの周波数を選択 (SELECT SAVED FREQUENCY) ~"
     station_selection_names = []
     station_selection_urls = []
 
-    # add last played station first
+    # add last played station first with stylized tag
     if last_station_info:
         station_selection_names.append(
-            f"{last_station_info['name'].strip()} (last played station)"
+            f"{last_station_info['name'].strip()} ［ 前回の受信 (LAST PLAYED) ］"
         )
         try:
             station_selection_urls.append(last_station_info["stationuuid"])
@@ -100,24 +97,22 @@ def handle_station_selection_menu(handler, last_station, alias) -> Tuple[str, st
 
     options = station_selection_names
     if len(options) == 0:
-        log.info(
-            f"{RED_COLOR}No stations to play. please search for a station first!{END_COLOR}"
-        )
+        # Keeping standard terminal red for fatal exit
+        log.info(f"{RED_COLOR}No stations to play. Please search for a station first!{END_COLOR}")
         sys.exit(0)
 
-    _, index = pick(options, title, indicator="-->")
+    # Make sure the indicator uses our styled arrow
+    _, index = pick(options, title, indicator=" ►► ")
 
-    # check if there is direct URL or just UUID
     station_option_url = station_selection_urls[index]
-    station_name = station_selection_names[index].replace("(last played station)", "")
+    
+    # [ CRITICAL: Update the strip logic to match the new tag ]
+    station_name = station_selection_names[index].replace(" ［ 前回の受信 (LAST PLAYED) ］", "")
 
     if station_option_url.find("://") != -1:
-        # direct URL
         station_url = station_option_url
         return station_name, station_url
-
     else:
-        # UUID
         station_uuid = station_option_url
         return handle_station_uuid_play(handler, station_uuid)
 
@@ -155,7 +150,7 @@ def handle_user_choice_from_search_result(handler, response) -> Tuple[str, str]:
 
         try:
             log.info("Type 'r' to play a random station")
-            user_input = input("Type the result ID to play: ")
+            user_input = input("   ► IDを選択 (Select ID): ")
         except EOFError:
             print()
             log.info("Exiting")
@@ -208,10 +203,9 @@ def handle_listen_keypress(
     Listen for user input during playback to perform actions.
     Now with handler and station_list for runtime commands.
     """
-    log.info("Press '?' to see available commands\n")
     while True:
         try:
-            user_input = input("Enter a command to perform an action: ")
+            user_input = input("   ► コマンド (Command): ")
         except EOFError:
             print()
             log.debug("Ctrl+D (EOF) detected. Exiting gracefully.")
@@ -230,7 +224,7 @@ def handle_listen_keypress(
                 )
             elif user_input in ["rf", "RF", "recordfile"]:
                 try:
-                    user_input = input("Enter output filename: ")
+                    user_input = input("   ► ファイル名 (Filename): ")
                 except EOFError:
                     print()
                     log.debug("Ctrl+D (EOF) detected. Exiting gracefully.")
@@ -272,7 +266,7 @@ def handle_listen_keypress(
 
         elif TIMER_FEATURE and user_input in ["timer", "sleep"]:
             try:
-                duration_str = input("Enter sleep timer duration in minutes: ")
+                duration_str = input("   ► スリープタイマー (Timer in minutes): ")
                 duration = float(duration_str)
                 if duration <= 0:
                     log.error("Duration must be positive")
@@ -320,7 +314,7 @@ def handle_listen_keypress(
         elif SEARCH_FEATURE and user_input in ["s", "S", "search"]:
             if handler:
                 try:
-                    query = input("Enter station name to search: ")
+                    query = input("   ► 検索局名 (Station Name): ")
                 except EOFError:
                     continue
 
@@ -465,23 +459,21 @@ def handle_listen_keypress(
                     "Cycle/Next unavailable (no search results or favorites to cycle through)"
                 )
 
+        elif user_input in ["e", "E", "edit"]:
+            import os
+            import subprocess
+            from rich import print
+            
+            # Use the system's default editor, fallback to nano
+            editor = os.environ.get("EDITOR", "nano")
+            print(f"   [#00FFFF]► エディタを起動中 (Opening {editor} to edit {alias.alias_path})[/]")
+            
+            # Suspend radio loop to open the text editor directly in terminal
+            subprocess.call([editor, alias.alias_path])
+            
+            # When editor is closed, force-reload the JSON into memory
+            alias.generate_map()
+            print("   [#C9B9E5]► 更新完了 (Favorites successfully reloaded)[/]")
+
         elif user_input in ["h", "H", "?", "help"]:
-            log.info("p: Play/Pause current station")
-            if TRACK_FEATURE:
-                log.info("t/track: Current track info")
-            if INFO_FEATURE:
-                log.info("i/info: Station information")
-            if RECORDING_FEATURE:
-                log.info("r/record: Record a station")
-                log.info("rf/recordfile: Specify a filename for the recording")
-            log.info("f/fav: Add station to favorite list")
-            if SEARCH_FEATURE:
-                log.info("s/search: Search for a new station")
-            if CYCLE_FEATURE:
-                log.info(
-                    "n/next: Play result from next station searching or favorite list"
-                )
-            if TIMER_FEATURE:
-                log.info("timer/sleep: Set a sleep timer")
-            log.info("h/help/?: Show this help message")
-            log.info("q/quit: Quit rajio_sen")
+            handle_interactive_help()

@@ -321,7 +321,7 @@ def signal_handler(sig, frame):
         #  kill the player
         player.stop()
 
-    log.info("Exiting now")
+    print("\n   [#FF0055]► 接続切断 (CONNECTION TERMINATED)[/]")
     sys.exit(0)
 
 
