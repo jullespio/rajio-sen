@@ -11,6 +11,7 @@ from typing import List, Optional, Dict, Any
 from rich.console import Console
 from rich.table import Table
 from zenlog import log
+from rich import box
 
 from rajio_sen.filter import filter_expressions
 
@@ -27,32 +28,46 @@ def trim_string(text: str, max_length: int = 40) -> str:
 
 def print_table(response, columns, sort_by, filter_expression):
     if not response:
-        log.error("No stations found")
+        # Replaced standard log with stylized output
+        print("   [#FF0055]► ［ 失敗 ］ No stations found for that query.[/]")
         return []
 
     if filter_expression.lower() != "none":
         response = filter_expressions(response, filter_expression)
         if not response:
-            log.error("No stations found after filtering")
+            print("   [#FF0055]► ［ 失敗 ］ No stations found after filtering.[/]")
             return []
 
-    table = Table(show_header=True, header_style="bold #00FFFF", expand=True, min_width=85)
-    table.add_column("ID", justify="center", style="#4E3F61")
+    # Injecting Neo-Tokyo border styles
+    table = Table(
+        show_header=True, 
+        header_style="bold #00FFFF", 
+        expand=True, 
+        min_width=85,
+        box=box.SIMPLE_HEAD,      # Match the HUD box style
+        border_style="#4E3F61"    # Dark purple borders
+    )
+    
+    # ID Column
+    table.add_column("ID", justify="center", style="bold #00FFFF")
 
+    # Parsing dynamic columns and adding them with a default Lavender style
     parsed_columns = []
     for col_spec in columns:
         col_name, rest = col_spec.split(":")
         res_key, max_len = rest.split("@")
         parsed_columns.append((col_name, res_key, int(max_len)))
-        table.add_column(col_name, justify="left")
+        # Applying the Lavender text color to the content columns
+        table.add_column(col_name, justify="left", style="#C9B9E5")
 
     for i, station in enumerate(response):
         row_data = [str(i + 1)]
         for _, res_key, max_len in parsed_columns:
-            val = station.get(res_key, "")
+            val = str(station.get(res_key, ""))
             row_data.append(trim_string(val, max_length=max_len))
         table.add_row(*row_data)
 
+    console.print("\n")
     console.print(table)
     return response
 

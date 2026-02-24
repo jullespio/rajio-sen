@@ -192,17 +192,28 @@ def handle_search_stations(handler, station_name: str, limit: int, sort_by: str,
 
 
 def handle_station_uuid_play(handler, station_uuid: str) -> Tuple[str, str]:
+    """Play a station by UUID and register a vote."""
     log.debug(f"Searching API for: {station_uuid}")
-    handler.play_by_station_uuid(station_uuid)
+
+    # The handler returns a list of matching stations (usually just 1 for a UUID)
+    response = handler.play_by_station_uuid(station_uuid)
+
+    log.debug(f"increased click count for: {station_uuid}")
     handler.vote_for_uuid(station_uuid)
-    
+
     try:
-        return handler.target_station["name"], handler.target_station["url"]
+        if response and len(response) > 0:
+            station = response[0]
+            station_name = station["name"]
+            station_url = station["url"]
+            return station_name, station_url
+        else:
+            raise ValueError("No station data returned from API for that UUID.")
+            
     except Exception as e:
         log.debug(f"UUID Play Error: {e}")
         print("   [#FF0055]► ［ 失敗 ］ UUID UPLINK FAILURE[/]")
         sys.exit(1)
-
 
 def handle_direct_play(alias, station_name_or_url: str = "") -> Tuple[str, str]:
     if "://" in station_name_or_url.strip():

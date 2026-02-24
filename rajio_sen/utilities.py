@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from pick import pick
 from pick import pick
 from zenlog import log
+from rich import print
 
 try:
     from rajio_sen.feature_flags import (
@@ -149,7 +150,7 @@ def handle_user_choice_from_search_result(handler, response) -> Tuple[str, str]:
         log.debug("Asking for user input")
 
         try:
-            log.info("Type 'r' to play a random station")
+            print("   [#C9B9E5]► ランダム再生 (Type 'r' to play a random station)[/]")
             user_input = input("   ► IDを選択 (Select ID): ")
         except EOFError:
             print()
@@ -314,33 +315,38 @@ def handle_listen_keypress(
         elif SEARCH_FEATURE and user_input in ["s", "S", "search"]:
             if handler:
                 try:
-                    query = input("   ► 検索局名 (Station Name): ")
+                    from rich import print
+                    query = input("   ► タグ検索 (Enter tag, e.g., vaporwave): ")
                 except EOFError:
                     continue
 
                 if query.strip():
-                    temp_station_list = handle_search_stations(
-                        handler, query, limit=100, sort_by="votes", filter_with="none"
+                    print(f"   [#00FFFF]► タグをスキャン中 (Scanning tag): {query}...[/]")
+                    
+                    # Rerouted to discover_by_tag
+                    temp_station_list = handler.discover_by_tag(
+                        query, limit=100, sort_by="votes", filter_with="none"
                     )
+                    
                     if temp_station_list:
                         station_list = temp_station_list
-                        # Find valid station choice
                         try:
                             station_name, target_url = (
                                 handle_user_choice_from_search_result(
                                     handler, station_list
                                 )
                             )
-                            # Stop current, switch
                             player.stop()
                             player.url = target_url
                             player.play()
                             handle_current_play_panel(station_name)
+                            
                             # Update loop variables
                             station_url = target_url
                         except SystemExit:
-                            # handle_user_choice might try to exit on cancel
                             pass
+                    else:
+                        print("   [#FF0055]► ［ 失敗 ］ No stations found for that tag.[/]")
             else:
                 log.warning("Search unavailable (handler not initialized)")
 

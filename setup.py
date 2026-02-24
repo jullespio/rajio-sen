@@ -45,7 +45,7 @@ setup(
     extras_require={"dev": required("-dev")},
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        "Development Status :: 4 - Beta",  # Reflecting the new 0.1.0 status
+        "Development Status :: 5 - Production/Stable",        
         "Environment :: Console",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",

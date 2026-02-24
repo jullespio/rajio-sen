@@ -22,8 +22,8 @@ def handle_welcome_screen() -> None:
 
  [#4E3F61]=====================================================[/]
 
- 操作コマンドを表示するには '?' を入力してください
- (Press '?' to see available commands)
+ [#C9B9E5]操作コマンドを表示するには '?' または 'h' を入力してください[/]
+ [#C9B9E5](Press '?' or 'h' to see available commands)[/]
         """,
         title="[b #00FFFF] ラジオ船 ( ＲＡＪＩＯ - ＳＥＮ ) [/]",
         width=85,
@@ -55,7 +55,7 @@ def handle_interactive_help() -> None:
     table.add_row("l / list", "登録リストを表示 (Show favorites table)")
     table.add_row("f / fav", "お気に入りに追加 (Add to favorites)")
     table.add_row("e / edit", "お気に入りを編集 (Edit favorites list)")
-    table.add_row("s / search", "新しい局を探す (Search new station)")
+    table.add_row("s / search", "新しい局を探す (Search by genre / tag)")
     table.add_row("n / next", "次の候補を再生 (Play next result)")
     table.add_row("timer", "スリープタイマー (Set sleep timer)")
     table.add_row("q / quit", "終了 (Exit Rajio-Sen)")
