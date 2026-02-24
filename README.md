@@ -1,10 +1,11 @@
-<div align=center>
+<div align="center">
 
-<h1 align=center> ＲＡＪＩＯ - ＳＥＮ ( ラジオ船 ) </h1>
+<h1 align="center"> ＲＡＪＩＯ - ＳＥＮ ( ラジオ船 ) </h1>
 <p> ＵＮＤＥＲＧＲＯＵＮＤ ＦＲＥＱＵＥＮＣＩＥＳ // ＰＩＲＡＴＥ ＲＡＤＩＯ ＳＣＡＮＮＥＲ </p>
 
-<p align=center>
+<p align="center">
 <img alt="GitHub Version" src="https://img.shields.io/badge/version-1.0.3-C9B9E5?style=for-the-badge&logo=github">
+<img alt="AUR Version" src="https://img.shields.io/aur/version/rajio-sen?style=for-the-badge&color=1793D1&logo=arch-linux">
 <img alt="GitHub" src="https://img.shields.io/github/license/jullespio/rajio-sen?style=for-the-badge&color=4E3F61">
 </p>
 
@@ -14,89 +15,106 @@
 
 **Rajio-Sen** is a minimalist, vaporwave-themed terminal radio scanner. It allows you to tune into thousands of radio stations globally directly from your command line. 
 
-This project is a heavily modified hard-fork of the original `radio-active` application. It has been completely rebuilt in the engine room to bypass abandoned dependencies (such as `pyradios`) in favor of a modern, direct-REST API communication array using the Radio-Browser database. The user interface has been redesigned using `rich` to provide a sleek, Neo-Tokyo heads-up display (HUD) with bilingual Japanese/English typography and a custom *Luminous Nebula* palette.
+This project is a heavily modified hard-fork of the original `radio-active` application. It has been completely rebuilt to bypass abandoned dependencies (such as `pyradios`) in favor of a modern, direct-REST API communication with the Radio-Browser database. The user interface has been redesigned using `rich` to provide a sleek terminal display with bilingual Japanese/English typography and a custom *Luminous Nebula* palette.
 
 ### ＦＥＡＴＵＲＥＳ (特徴)
 
-- [x] **Direct API Uplink:** Bypasses bloated packages to connect directly to the Radio-Browser network for live, uncached sub-space telemetry.
-- [x] **Vaporwave HUD:** Stripped-down minimalist terminal interface featuring `rich` box styling, Kanji headers, and fullwidth characters.
-- [x] **Independent Transponder:** Checks for software updates exclusively against the custom GitHub releases API.
+- [x] **Direct API Integration:** Connects directly to the Radio-Browser network for live, real-time station data.
+- [x] **Vaporwave TUI:** Stripped-down minimalist terminal interface featuring `rich` box styling and full-width characters.
+- [x] **Update Notifications:** Checks for software updates against the official GitHub releases API.
 - [x] Supports more than 40K stations globally.
-- [x] Record audio from live radio streams on demand.
+- [x] Record audio from live radio streams on demand via FFmpeg.
 - [x] Save and manage favorite stations effortlessly.
 - [x] Discover stations by tag, country, or language.
 - [x] VLC, MPV, and FFplay player support.
-- [x] Sleep Timer (pomodoro) functionality.
+- [x] Integrated Sleep Timer functionality.
 
 ### ＩＮＳＴＡＬＬ (インストール)
 
-As this is a custom fork, the vessel must be constructed in your local drydock.
+#### ＡＵＲ
+For users on Arch-based systems, it is recommended to install via the AUR:
 
 ```bash
+# Using yay
+yay -S rajio-sen
+
+# Using paru
+paru -S rajio-sen
+```
+
+#### Manual Installation
+```bash
 # Clone the repository
-git clone [https://github.com/jullespio/rajio-sen.git](https://github.com/jullespio/rajio-sen.git)
+git clone https://github.com/jullespio/rajio-sen.git
 cd rajio-sen
 
 # Create and activate a virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 
 # Install the application and dependencies
-pip install -e .
+pip install .
 ```
 
 *Note: You must have [FFmpeg](https://ffmpeg.org/download.html) installed on your system to process and record audio streams.*
 
 ### ＲＵＮ (起動)
 
-Search for a station and initialize the HUD:
+Once installed, use the `rajio` command to initialize the interface:
+
 ```bash
-python -m rajio_sen --search "city pop"
+# Search for a specific genre or name
+rajio --search "city pop"
+
+# Play directly from your favorites list
+rajio --play "Night City"
 ```
-*(You may also use the `radio` or `rajio_sen` entry points depending on your environment alias setup).*
 
 ### ＯＰＴＩＯＮＳ (設定)
 
-| Options            | Description                                    | Default       | Values                 |
-| ------------------ | ---------------------------------------------- | ------------- | ---------------------- |
-| (No Option)        | Select a station from menu to play             | False         |                        |
-| `--search`, `-S`   | Station name                                   | None          |                        |
-| `--play`, `-P`     | A station from fav list or url for direct play | None          |                        |
-| `--country`, `-C`  | Discover stations by country code              | False         |                        |
-| `--tag`            | Discover stations by tags/genre                | False         |                        |
-| `--record` , `-R`  | Record a station and save to file              | False         |                        |
-| `--limit`          | Limit the # of results in the Discover table   | 100           |                        |
-| `--volume` , `-V`  | Change the volume passed into ffplay           | 80            | [0-100]                |
-| `--favorite`, `-F` | Add current station to fav list                | False         |                        |
+| Options | Description | Default | Values |
+| :--- | :--- | :--- | :--- |
+| (No Option) | Select a station from menu to play | False | |
+| `--search`, `-S` | Search station by name | None | |
+| `--play`, `-P` | Play from favorites or direct URL | None | |
+| `--country`, `-C` | Filter stations by country code | False | |
+| `--tag` | Search stations by tags/genre | False | |
+| `--record` , `-R` | Record current station to file | False | |
+| `--limit` | Limit number of search results | 100 | |
+| `--volume` , `-V` | Set playback volume | 80 | [0-100] |
+| `--favorite`, `-F` | Add current station to favorites | False | |
 
 ### ＲＵＮＴＩＭＥ ＣＯＭＭＡＮＤＳ (操作)
 
-Input a command during the radio playback to perform an action:
+Input commands during playback to perform the following actions:
 
 ```text
-t/T/track     : Current song name (track info)
-r/R/record    : Record a station
-f/F/fav       : Add station to favorite list
-s/S/search    : Search for a new station
-n/N/next      : Play next station from search results or favorite list
-timer/sleep   : Set a sleep timer (duration in minutes)
-q/Q/quit      : Quit Rajio-Sen
+p             : Play/Pause
+t / track     : Display current stream metadata
+i / info      : Information about the station
+r / record    : Toggle recording mode
+l / list      : Display favorites list
+f / fav       : Add station to favorites list
+e / edit      : Edit favorites list
+s / search    : Search by tag/genre
+n / next      : Play next result in current list
+timer / sleep : Set sleep timer duration (minutes)
+q / quit      : Close the application
 ```
 
 ### ＣＯＮＦＩＧＵＲＡＴＩＯＮ (システム構成)
 
-All data files are stored in a dedicated directory under your user home path:
+Configuration and data files are located in the user home directory:
 
-- **Configuration**:  `~/rajio_sen/config.ini`
+- **Config**:  `~/rajio_sen/config.ini`
 - **Favorites**: `~/rajio_sen/alias_map`
-- **Last Station**: `~/rajio_sen/last_station`
 - **Recordings**: `~/rajio_sen/recordings`
 
 ### ＡＣＫＮＯＷＬＥＤＧＥＭＥＮＴＳ (謝辞)
 
 *Rajio-Sen* is maintained by **ジュレス (juresu)**. 
-This project was originally forked from the excellent `radio-active` CLI built by Dipankar Pal (deep5050). The hull was stripped down, the warp core replaced, and the UI redesigned to fit a new operational profile. 
+Originally forked from `radio-active` by Dipankar Pal. Refactored for modern performance and aesthetic standards.
 
-<div align=center>
-<p align=center> ＲＡＤＩＯ ＷＡＶＥＳ ＯＦ ＴＨＥ ＦＵＴＵＲＥ </p>
+<div align="center">
+<p align="center"> ＲＡＤＩＯ ＷＡＶＥＳ ＯＦ ＴＨＥ ＦＵＴＵＲＥ </p>
 </div>
