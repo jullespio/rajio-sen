@@ -37,7 +37,7 @@ setup(
         "console_scripts": [
             "rajio = rajio_sen.__main__:main",      # The primary command
             "rajio-sen = rajio_sen.__main__:main",  # Alternative name
-            "radio = rajio_sen.__main__:main",      # Legacy compatibility
+            #"radio = rajio_sen.__main__:main",      # Legacy compatibility
         ]
     },
     packages=find_packages(exclude=["test*"]),
