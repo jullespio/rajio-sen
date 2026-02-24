@@ -1,7 +1,7 @@
 import os.path
 
 from pick import pick
-from zenlog import log
+from .zenlog import log
 
 
 class Alias:

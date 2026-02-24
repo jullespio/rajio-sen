@@ -10,7 +10,7 @@ from typing import List, Optional, Dict, Any
 
 from rich.console import Console
 from rich.table import Table
-from zenlog import log
+from .zenlog import log
 from rich import box
 
 from rajio_sen.filter import filter_expressions

@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from zenlog import log
+from .zenlog import log
 
 from rajio_sen.config import Configs
 

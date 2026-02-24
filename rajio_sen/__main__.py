@@ -4,7 +4,7 @@ import signal
 import sys
 from time import sleep
 
-from zenlog import log
+from .zenlog import log
 
 from rajio_sen.alias import Alias
 from rajio_sen.app import App

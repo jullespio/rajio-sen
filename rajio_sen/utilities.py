@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 from pick import pick
 from pick import pick
-from zenlog import log
+from .zenlog import log
 from rich import print
 
 try:

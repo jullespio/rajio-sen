@@ -2,7 +2,7 @@ import subprocess
 import sys
 from shutil import which
 
-from zenlog import log
+from .zenlog import log
 
 
 class MPV:

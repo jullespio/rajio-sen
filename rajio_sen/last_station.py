@@ -4,7 +4,7 @@ and loads the data when no arguments are provide """
 import json
 import os.path
 
-from zenlog import log
+from .zenlog import log
 
 
 class Last_station:

@@ -1,6 +1,6 @@
 from typing import Dict, Any, Optional
 
-from zenlog import log
+from .zenlog import log
 
 from rajio_sen.args import Parser
 
