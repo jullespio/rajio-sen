@@ -301,7 +301,7 @@ def handle_listen_keypress(
             player.stop()
             sys.exit(0)
 
-        elif user_input in ["w", "W", "list"]:
+        elif user_input in ["l", "L", "list"]:
             alias.generate_map()
             handle_favorite_table(alias)
 

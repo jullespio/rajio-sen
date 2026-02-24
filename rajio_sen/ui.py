@@ -52,6 +52,7 @@ def handle_interactive_help() -> None:
     table.add_row("t / track", "現在の曲情報 (Current track info)")
     table.add_row("i / info", "局データ (Station telemetry)")
     table.add_row("r / record", "録音開始 (Start recording)")
+    table.add_row("l / list", "登録リストを表示 (Show favorites table)")
     table.add_row("f / fav", "お気に入りに追加 (Add to favorites)")
     table.add_row("e / edit", "お気に入りを編集 (Edit favorites list)")
     table.add_row("s / search", "新しい局を探す (Search new station)")
@@ -143,7 +144,7 @@ def handle_current_play_panel(curr_station_name: str = "") -> None:
 
     station_panel = Panel(
         panel_station_name, 
-        title="[blink #00FFFF] ＯＮ ＡＩＲ [/]", 
+        title="[b blink #FF4800] ＯＮ ＡＩＲ [/]", 
         width=85,
         box=box.MINIMAL,
         border_style="#4E3F61"
