@@ -1,4 +1,6 @@
-import json
+import requests
+from requests.exceptions import RequestException
+
 
 class App:
     def __init__(self):
@@ -16,21 +18,29 @@ class App:
     def is_update_available(self):
         """Checks if the user is using an outdated version of the app from GitHub"""
         try:
-            import requests
+            try:
+                response = requests.get(self.github_api, timeout=5)
+                response.raise_for_status()
+                remote_data = response.json()
+            except (RequestException, ValueError):
+                return False
 
-            remote_data = requests.get(self.github_api, timeout=5)
-            remote_data.raise_for_status()
-            remote_data = remote_data.json()
-            
+            if not remote_data or "tag_name" not in remote_data:
+                return False
+
             # GitHub tags often have a 'v' (e.g., 'v3.0.1'). We strip it for the math.
             self.remote_version = remote_data["tag_name"].lstrip('v')
 
             # compare two version numbers
-            tup_local = tuple(map(int, self.__VERSION__.split(".")))
-            tup_remote = tuple(map(int, self.remote_version.split(".")))
+            try:
+                tup_local = tuple(map(int, self.__VERSION__.split(".")))
+                tup_remote = tuple(map(int, self.remote_version.split(".")))
 
-            if tup_remote > tup_local:
-                return True
+                if tup_remote > tup_local:
+                    return True
+            except (ValueError, IndexError):
+                return False
+
             return False
 
         except Exception:
