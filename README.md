@@ -4,7 +4,7 @@
 <p> ＵＮＤＥＲＧＲＯＵＮＤ ＦＲＥＱＵＥＮＣＩＥＳ // ＰＩＲＡＴＥ ＲＡＤＩＯ ＳＣＡＮＮＥＲ </p>
 
 <p align="center">
-<img alt="GitHub Version" src="https://img.shields.io/badge/version-1.0.4-C9B9E5?style=for-the-badge&logo=github">
+<img alt="GitHub Version" src="https://img.shields.io/badge/version-1.0.5-C9B9E5?style=for-the-badge&logo=github">
 <img alt="AUR Version" src="https://img.shields.io/aur/version/rajio-sen?style=for-the-badge&color=1793D1&logo=arch-linux">
 <img alt="GitHub" src="https://img.shields.io/github/license/jullespio/rajio-sen?style=for-the-badge&color=4E3F61">
 </p>

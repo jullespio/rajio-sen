@@ -1,3 +1,3 @@
-__AUTHOR__ = "Dipankar Pal"
-__EMAIL__ = "dipankarpal5050@gmail.com"
-__WEBSITE__ = "deep5050.github.io"
+__AUTHOR__ = "Julles Pio"
+__EMAIL__ = "jullespio@outlook.com"
+__WEBSITE__ = ""
