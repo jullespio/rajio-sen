@@ -158,6 +158,8 @@ def main():
 
     handle_update_screen(app)
 
+    response = []
+
     # ----------- country ----------- #
     if options["discover_country_code"]:
         response = handler.discover_by_country(
@@ -166,96 +168,66 @@ def main():
             options["sort_by"],
             options["filter_with"],
         )
-        if response is not None:
-            (
-                options["curr_station_name"],
-                options["target_url"],
-            ) = handle_user_choice_from_search_result(handler, response)
-            final_step(options, last_station, alias, handler, response)
+        if response:
+            options["curr_station_name"], options["target_url"] = \
+                handle_user_choice_from_search_result(handler, response)
         else:
             sys.exit(0)
 
     # -------------- state ------------- #
-    if options["discover_state"]:
+    elif options["discover_state"]:
         response = handler.discover_by_state(
             options["discover_state"],
             options["limit"],
             options["sort_by"],
             options["filter_with"],
         )
-        if response is not None:
-            (
-                options["curr_station_name"],
-                options["target_url"],
-            ) = handle_user_choice_from_search_result(handler, response)
-            final_step(options, last_station, alias, handler, response)
+        if response:
+            options["curr_station_name"], options["target_url"] = \
+                handle_user_choice_from_search_result(handler, response)
         else:
             sys.exit(0)
 
     # ----------- language ------------ #
-    if options["discover_language"]:
+    elif options["discover_language"]:
         response = handler.discover_by_language(
             options["discover_language"],
             options["limit"],
             options["sort_by"],
             options["filter_with"],
         )
-        if response is not None:
-            (
-                options["curr_station_name"],
-                options["target_url"],
-            ) = handle_user_choice_from_search_result(handler, response)
-            final_step(options, last_station, alias, handler, response)
+        if response:
+            options["curr_station_name"], options["target_url"] = \
+                handle_user_choice_from_search_result(handler, response)
         else:
             sys.exit(0)
 
     # -------------- tag ------------- #
-    if options["discover_tag"]:
+    elif options["discover_tag"]:
         response = handler.discover_by_tag(
             options["discover_tag"],
             options["limit"],
             options["sort_by"],
             options["filter_with"],
         )
-        if response is not None:
-            (
-                options["curr_station_name"],
-                options["target_url"],
-            ) = handle_user_choice_from_search_result(handler, response)
-            final_step(options, last_station, alias, handler, response)
+        if response:
+            options["curr_station_name"], options["target_url"] = \
+                handle_user_choice_from_search_result(handler, response)
         else:
             sys.exit(0)
 
-    # -------------------- NOTHING PROVIDED --------------------- #
-    if (
-        options["search_station_name"] is None
-        and options["search_station_uuid"] is None
-        and options["direct_play"] is None
-        and not options["play_last_station"]
-        and not options["play_random"]
-    ):
-        (
-            options["curr_station_name"],
-            options["target_url"],
-        ) = handle_station_selection_menu(handler, last_station, alias)
-        final_step(options, last_station, alias, handler)
-
     # --------------------ONLY UUID PROVIDED --------------------- #
-
-    if options["search_station_uuid"] is not None:
+    elif options["search_station_uuid"] is not None:
         options["curr_station_name"], options["target_url"] = handle_station_uuid_play(
             handler, options["search_station_uuid"]
         )
-        final_step(options, last_station, alias, handler)
 
     # ------------------- ONLY STATION PROVIDED ------------------ #
-
     elif (
         options["search_station_name"] is not None
         and options["search_station_uuid"] is None
         and options["direct_play"] is None
     ):
-        response = [{}]
         response = handle_search_stations(
             handler,
             options["search_station_name"],
@@ -263,40 +235,35 @@ def main():
             options["sort_by"],
             options["filter_with"],
         )
-        if response is not None:
-            (
-                options["curr_station_name"],
-                options["target_url"],
-            ) = handle_user_choice_from_search_result(handler, response)
-            # options["codec"] = response["codec"]
-            # print(response)
-            final_step(options, last_station, alias, handler, response)
+        if response:
+            options["curr_station_name"], options["target_url"] = \
+                handle_user_choice_from_search_result(handler, response)
         else:
             sys.exit(0)
+
     # ------------------------- direct play ------------------------#
-    if options["direct_play"] is not None:
+    elif options["direct_play"] is not None:
         options["curr_station_name"], options["target_url"] = handle_direct_play(
             alias, options["direct_play"]
         )
-        final_step(options, last_station, alias, handler)
 
-    if options["play_random"]:
+    elif options["play_random"]:
         (
             options["curr_station_name"],
             options["target_url"],
         ) = handle_play_random_station(alias)
-        final_step(options, last_station, alias, handler)
 
-    if options["play_last_station"]:
+    elif options["play_last_station"]:
         options["curr_station_name"], options["target_url"] = handle_play_last_station(
             last_station
         )
-        final_step(options, last_station, alias, handler)
 
-    # final_step()
-    # If response is not defined yet, initialize it
-    if "response" not in locals():
-        response = []
+    # -------------------- NOTHING PROVIDED --------------------- #
+    else:
+        (
+            options["curr_station_name"],
+            options["target_url"],
+        ) = handle_station_selection_menu(handler, last_station, alias)
 
     final_step(options, last_station, alias, handler, response)
 

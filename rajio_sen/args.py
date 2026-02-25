@@ -196,8 +196,7 @@ class Parser:
             dest="volume",
             default=self.defaults["volume"],
             type=int,
-            choices=range(0, 101, 10),
-            help="Volume to pass down to ffplay",
+            help="Volume level (0-100)",
         )
 
         self.parser.add_argument(

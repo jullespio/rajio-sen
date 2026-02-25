@@ -5,12 +5,11 @@ Acts as a controller/orchestrator, delegating to UI and Actions modules.
 
 import sys
 import threading
-import time
 import os
+import subprocess
 from random import randint
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Tuple
 
-from pick import pick
 from pick import pick
 from zenlog import log
 from rich import print
@@ -34,30 +33,30 @@ except ImportError:
 
 # Re-export functions for backward compatibility and aggregation
 from rajio_sen.ui import (
-    handle_welcome_screen,
-    handle_update_screen,
-    handle_favorite_table,
-    handle_show_station_info,
-    handle_current_play_panel,
-    set_global_station_info,
-    get_global_station_info,
-    handle_interactive_help,
+    handle_welcome_screen,  # noqa: F401
+    handle_update_screen,  # noqa: F401
+    handle_favorite_table,  # noqa: F401
+    handle_show_station_info,  # noqa: F401
+    handle_current_play_panel,  # noqa: F401
+    set_global_station_info,  # noqa: F401
+    get_global_station_info,  # noqa: F401
+    handle_interactive_help,  # noqa: F401
 )
 
 from rajio_sen.actions import (
-    handle_fetch_song_title,
-    handle_record,
-    handle_add_station,
-    handle_add_to_favorite,
-    handle_save_last_station,
-    check_sort_by_parameter,
-    handle_search_stations,
-    handle_station_uuid_play,
-    handle_direct_play,
-    handle_play_last_station,
-    handle_get_station_name_from_metadata,
-    handle_station_name_from_headers,
-    handle_play_random_station,
+    handle_fetch_song_title,  # noqa: F401
+    handle_record,  # noqa: F401
+    handle_add_station,  # noqa: F401
+    handle_add_to_favorite,  # noqa: F401
+    handle_save_last_station,  # noqa: F401
+    check_sort_by_parameter,  # noqa: F401
+    handle_search_stations,  # noqa: F401
+    handle_station_uuid_play,  # noqa: F401
+    handle_direct_play,  # noqa: F401
+    handle_play_last_station,  # noqa: F401
+    handle_get_station_name_from_metadata,  # noqa: F401
+    handle_station_name_from_headers,  # noqa: F401
+    handle_play_random_station,  # noqa: F401
 )
 from rajio_sen.ffplay import kill_background_ffplays
 
@@ -106,7 +105,7 @@ def handle_station_selection_menu(handler, last_station, alias) -> Tuple[str, st
     _, index = pick(options, title, indicator=" ►► ")
 
     station_option_url = station_selection_urls[index]
-    
+
     # [ CRITICAL: Update the strip logic to match the new tag ]
     station_name = station_selection_names[index].replace(" ［ 前回の受信 (LAST PLAYED) ］", "")
 
@@ -315,19 +314,18 @@ def handle_listen_keypress(
         elif SEARCH_FEATURE and user_input in ["s", "S", "search"]:
             if handler:
                 try:
-                    from rich import print
                     query = input("   ► タグ検索 (Enter tag, e.g., vaporwave): ")
                 except EOFError:
                     continue
 
                 if query.strip():
                     print(f"   [#00FFFF]► タグをスキャン中 (Scanning tag): {query}...[/]")
-                    
+
                     # Rerouted to discover_by_tag
                     temp_station_list = handler.discover_by_tag(
                         query, limit=100, sort_by="votes", filter_with="none"
                     )
-                    
+
                     if temp_station_list:
                         station_list = temp_station_list
                         try:
@@ -340,7 +338,7 @@ def handle_listen_keypress(
                             player.url = target_url
                             player.play()
                             handle_current_play_panel(station_name)
-                            
+
                             # Update loop variables
                             station_url = target_url
                         except SystemExit:
@@ -466,17 +464,13 @@ def handle_listen_keypress(
                 )
 
         elif user_input in ["e", "E", "edit"]:
-            import os
-            import subprocess
-            from rich import print
-            
             # Use the system's default editor, fallback to nano
             editor = os.environ.get("EDITOR", "nano")
             print(f"   [#00FFFF]► エディタを起動中 (Opening {editor} to edit {alias.alias_path})[/]")
-            
+
             # Suspend radio loop to open the text editor directly in terminal
             subprocess.call([editor, alias.alias_path])
-            
+
             # When editor is closed, force-reload the JSON into memory
             alias.generate_map()
             print("   [#C9B9E5]► 更新完了 (Favorites successfully reloaded)[/]")

@@ -6,7 +6,7 @@
 import sys
 import random
 import requests
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Any
 
 from rich.console import Console
 from rich.table import Table
@@ -23,8 +23,10 @@ except ImportError:
 console = Console()
 
 def trim_string(text: str, max_length: int = 40) -> str:
-    if not isinstance(text, str): return str(text)
+    if not isinstance(text, str):
+        return str(text)
     return text[:max_length] + "..." if len(text) > max_length else text
+
 
 def print_table(response, columns, sort_by, filter_expression):
     if not response:
@@ -40,14 +42,14 @@ def print_table(response, columns, sort_by, filter_expression):
 
     # Injecting Neo-Tokyo border styles
     table = Table(
-        show_header=True, 
-        header_style="bold #00FFFF", 
-        expand=True, 
+        show_header=True,
+        header_style="bold #00FFFF",
+        expand=True,
         min_width=85,
         box=box.SIMPLE_HEAD,      # Match the HUD box style
         border_style="#4E3F61"    # Dark purple borders
     )
-    
+
     # ID Column
     table.add_column("ID", justify="center", style="bold #00FFFF")
 
@@ -80,9 +82,24 @@ class Handler:
         try:
             resp = requests.get("https://all.api.radio-browser.info/json/servers", timeout=5)
             resp.raise_for_status()
-            return f"https://{random.choice(resp.json())['name']}"
+            servers = resp.json()
+            random.shuffle(servers)
+
+            for server in servers:
+                base_url = f"https://{server['name']}"
+                try:
+                    # Quick connectivity check using a lightweight endpoint
+                    check = requests.get(f"{base_url}/json/stats", timeout=3)
+                    check.raise_for_status()
+                    return base_url
+                except Exception:
+                    log.debug(f"Mirror {base_url} unreachable, trying next...")
+                    continue
+
+            log.critical("All Radio-Browser mirrors are unreachable.")
+            sys.exit(1)
         except Exception as e:
-            log.critical(f"Connection failure: {e}")
+            log.critical(f"Mirror discovery failed: {e}")
             sys.exit(1)
 
     def _api_call(self, endpoint: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
@@ -93,7 +110,7 @@ class Handler:
             # We default to reverse=true for popular metrics (clickcount, votes)
             if params.get("order") and params["order"] != "name":
                 params["reverse"] = "true"
-            
+
             resp = requests.get(url, params=params, timeout=10)
             resp.raise_for_status()
             return resp.json()
@@ -103,7 +120,7 @@ class Handler:
 
     def search_by_station_name(self, name, limit, sort_by, filter_with):
         params = {"name": name, "limit": limit, "order": sort_by, "hidebroken": "true"}
-        response = self._api_call("stations/byname", params)
+        response = self._api_call("stations/search", params)
         return print_table(response, ["Station:name@30", "Country:country@20", "Tags:tags@20"], sort_by, filter_with)
 
     def play_by_station_uuid(self, uuid):
