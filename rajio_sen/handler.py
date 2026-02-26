@@ -114,19 +114,20 @@ class Handler:
             sys.exit(1)
 
     def _api_call(self, endpoint: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
-        """Safe transmission to the mirror network."""
+        """Direct transmission to the Radio Browser mirror network."""
         try:
+            # self.base_url now triggers lazy discovery if needed
             url = f"{self.base_url}/json/{endpoint}"
-            # Sorting logic: API expects order (key) and reverse (bool)
-            # We default to reverse=true for popular metrics (clickcount, votes)
-            if params.get("order") and params["order"] != "name":
+            
+            # API logic: popularity metrics (votes, clicks) should be reversed
+            if params.get("order") and params["order"] in ["votes", "clickcount", "bitrate"]:
                 params["reverse"] = "true"
 
             resp = requests.get(url, params=params, timeout=10)
             resp.raise_for_status()
             return resp.json()
         except Exception as e:
-            log.debug(f"API Error: {e}")
+            log.debug(f"API Transmission Error: {e}")
             return []
 
     def search_by_station_name(self, name, limit, sort_by, filter_with):
