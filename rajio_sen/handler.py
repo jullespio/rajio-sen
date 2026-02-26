@@ -10,7 +10,7 @@ from typing import List, Dict, Any
 
 from rich.console import Console
 from rich.table import Table
-from zenlog import log
+from rajio_sen.logger import log
 from rich import box
 
 from rajio_sen.filter import filter_expressions
@@ -75,8 +75,19 @@ def print_table(response, columns, sort_by, filter_expression):
 
 class Handler:
     def __init__(self):
-        self.base_url = self.discover_mirror()
+        self._base_url = None 
 
+    @property
+    def base_url(self) -> str:
+        """
+        Managed property for the API mirror. 
+        Triggers discovery only upon first access.
+        """
+        if self._base_url is None:
+            log.info("[bold #00FFFF]📡 SYNCHRONIZING WITH MIRROR NETWORK...[/]")
+            self._base_url = self.discover_mirror()
+        return self._base_url
+    
     def discover_mirror(self) -> str:
         """Find an active API mirror."""
         try:

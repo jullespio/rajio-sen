@@ -11,7 +11,8 @@ from random import randint
 from typing import Tuple
 
 from pick import pick
-from zenlog import log
+from rajio_sen import handler
+from rajio_sen.logger import log
 from rich import print
 
 try:
@@ -144,46 +145,39 @@ def handle_user_choice_from_search_result(handler, response) -> Tuple[str, str]:
         else:
             log.debug("Quitting")
             sys.exit(0)
+
     else:
-        # multiple station
+        # multiple stations found
         log.debug("Asking for user input")
 
         try:
-            print("   [#C9B9E5]► ランダム再生 (Type 'r' to play a random station)[/]")
-            user_input = input("   ► IDを選択 (Select ID): ")
+            print("   [#C9B9E5]► ランダム再生 (Type 'r' for random, 'q' or Enter to cancel)[/]")
+            user_input = input("   ► IDを選択 (Select ID): ").strip() # .strip() handles Windows \r
         except EOFError:
-            print()
-            log.info("Exiting")
-            log.debug("EOF reached, quitting")
-            sys.exit(0)
+            return None, None
+
+        # [ ESCAPE HATCH ] 
+        # If user hits Enter or types 'q', we return to the main prompt
+        if not user_input or user_input.lower() in ["q", "quit", "exit"]:
+            print("   [#4E3F61]► 選択をキャンセルしました (Selection cancelled).[/]")
+            return None, None
 
         try:
-            if user_input in ["r", "R", "random"]:
-                # pick a random integer withing range
-                user_input = randint(1, len(response) - 1)
-                log.debug(f"Radom station id: {user_input}")
-            # elif user_input in ["f", "F", "fuzzy"]:
-            # fuzzy find all the stations, and return the selected station id
-            # user_input = fuzzy_find(response)
+            if user_input.lower() in ["r", "random"]:
+                user_input = randint(1, len(response))
+                log.info(f"Randomly selected ID: {user_input}")
 
-            user_input = int(user_input) - 1  # because ID starts from 1
-            if user_input in range(0, len(response)):
-                target_response = response[user_input]
-                log.debug(f"Selected: {target_response}")
-
-                # saving global info
+            idx = int(user_input) - 1
+            if 0 <= idx < len(response):
+                target_response = response[idx]
                 set_global_station_info(target_response)
-
                 return handle_station_uuid_play(handler, target_response["stationuuid"])
             else:
-                log.error("Please enter an ID within the range")
-                sys.exit(1)
+                log.error(f"ID {user_input} is out of range.")
+                return None, None # Fallback to prompt instead of exit
         except ValueError:
-            log.error("Please enter an valid ID number")
-            sys.exit(1)
-        except Exception as e:
-            log.error(f"Error: {e}")
-            sys.exit(1)
+            log.error("Invalid ID. Please enter a number.")
+            return None, None
 
 
 def handle_listen_keypress(
@@ -314,7 +308,7 @@ def handle_listen_keypress(
         elif SEARCH_FEATURE and user_input in ["s", "S", "search"]:
             if handler:
                 try:
-                    query = input("   ► タグ検索 (Enter tag, e.g., vaporwave): ")
+                    query = input("   ► タグ検索 (Enter tag, e.g., jazz): ")
                 except EOFError:
                     continue
 
@@ -328,21 +322,18 @@ def handle_listen_keypress(
 
                     if temp_station_list:
                         station_list = temp_station_list
-                        try:
-                            station_name, target_url = (
-                                handle_user_choice_from_search_result(
-                                    handler, station_list
-                                )
-                            )
-                            player.stop()
-                            player.url = target_url
-                            player.play()
-                            handle_current_play_panel(station_name)
+                        res_name, res_url = handle_user_choice_from_search_result(handler, station_list)
 
-                            # Update loop variables
-                            station_url = target_url
-                        except SystemExit:
-                            pass
+                        if res_name and res_url:
+                            player.stop()
+                            player.url = res_url
+                            player.play()
+                            handle_current_play_panel(res_name)
+                            station_url = res_url
+                        else:
+                        # User cancelled or error occurred; just continue the loop
+                            continue
+
                     else:
                         print("   [#FF0055]► ［ 失敗 ］ No stations found for that tag.[/]")
             else:
