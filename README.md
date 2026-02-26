@@ -6,7 +6,8 @@
 <p align="center">
 <img alt="GitHub Version" src="https://img.shields.io/badge/version-1.2.0-C9B9E5?style=for-the-badge&logo=github">
 <img alt="AUR Version" src="https://img.shields.io/aur/version/rajio-sen?style=for-the-badge&color=1793D1&logo=arch-linux">
-<img alt="GitHub License" src="https://img.shields.io/github/license/jullespio/rajio-sen?style=for-the-badge&color=4E3F61">
+<img alt="GitHub License" src="https://img.shields.io/github/license/jullespio/rajio-sen?style=for-the-badge&color=4E3F61&v=1.2.0">
+</p>
 
 </div>
 
