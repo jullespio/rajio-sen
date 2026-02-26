@@ -1,3 +1,3 @@
 __AUTHOR__ = "Julles Pio"
-__EMAIL__ = "jullespio@outlook.com"
+__EMAIL__ = "jullespio@mail.com"
 __WEBSITE__ = ""

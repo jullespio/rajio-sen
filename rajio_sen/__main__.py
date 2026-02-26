@@ -4,6 +4,8 @@ import signal
 import sys
 from time import sleep
 
+from requests import options
+
 from rajio_sen.logger import log
 
 from rajio_sen.alias import Alias
@@ -44,10 +46,8 @@ def final_step(options, last_station, alias, handler, station_list=None):
     global player
 
     # check target URL for the last time
-    if options["target_url"].strip() == "":
-        log.error("something is wrong with the url")
-        sys.exit(1)
-
+    if options["target_url"] is None or str(options["target_url"]).strip() == "":
+        sys.exit(0)
     if options["audio_player"] == "vlc":
         from rajio_sen.vlc import VLC
 

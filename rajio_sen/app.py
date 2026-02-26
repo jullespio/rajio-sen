@@ -1,10 +1,11 @@
 import requests
 from requests.exceptions import RequestException
 
+from .__about__ import __version__
 
 class App:
     def __init__(self):
-        self.__VERSION__ = "1.2.0" # Increment this when you make a new release!
+        self.__VERSION__ = __version__
         self.github_api = "https://api.github.com/repos/jullespio/rajio-sen/releases/latest"
         self.remote_version = ""
 
