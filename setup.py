@@ -30,7 +30,7 @@ setup(
     long_description_content_type="text/markdown",
     keywords="radios api internet-radio cli app vaporwave pirate-radio",
     author="ジュレス (juresu)", 
-    author_email="YOUR_EMAIL@HERE", 
+    author_email="jullespio@users.noreply.github.com", 
     url="https://github.com/jullespio/rajio-sen",
     license="MIT",
     entry_points={
