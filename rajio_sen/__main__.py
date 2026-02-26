@@ -4,7 +4,7 @@ import signal
 import sys
 from time import sleep
 
-from zenlog import log
+from rajio_sen.logger import log
 
 from rajio_sen.alias import Alias
 from rajio_sen.app import App
@@ -110,7 +110,7 @@ def final_step(options, last_station, alias, handler, station_list=None):
 
 
 def main():
-    log.level("info")
+    log.setLevel("INFO")
 
     app = App()
 

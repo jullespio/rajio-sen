@@ -1,6 +1,6 @@
 from typing import Dict, Any, Optional
 
-from zenlog import log
+from rajio_sen.logger import log
 
 from rajio_sen.args import Parser
 
@@ -23,9 +23,9 @@ def parse_options() -> Dict[str, Any]:
 
     # check log levels
     if options["loglevel"] in ["info", "error", "warning", "debug"]:
-        log.level(options["loglevel"])
+        log.setLevel(options["loglevel"].upper())
     else:
-        log.level("info")
+        log.setLevel("INFO")
         log.warning("Correct log levels are: error, warning, info(default), debug")
 
     # check is limit is a valid integer

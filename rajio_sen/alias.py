@@ -1,7 +1,7 @@
 import os.path
 
 from pick import pick
-from zenlog import log
+from rajio_sen.logger import log
 
 
 class Alias:
