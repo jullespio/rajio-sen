@@ -1,3 +1,19 @@
+# Changelog
+
+[Rajio-sen / Fork]
+## 1.2.0
+
+    1. Direct-to-API Engine: Completely internalized Radio-Browser API communication using requests, removing the pyradios middleman.
+    2. Lazy Initialization: API mirror discovery is now deferred until a search or play command is actually issued.
+    3. Interactive Escape Hatches: Typing 'q' or pressing Enter at the Station ID prompt now returns to the main command menu instead of exiting.
+    4. Smart Sorting Matrix: Internal API handler now automatically applies reverse=true when sorting by popularity metrics like votes or click-count.
+    5. HUD Modernization: Integrated rich.logging for a cleaner terminal interface, removing raw file paths and log levels from the output.
+
+=================================================================================================================================
+
+```markdown
+<!--
+[Legacy / Upstream]
 ## 2.9.1
 
 1. Play a random station from favorite list `--random`
@@ -141,3 +157,5 @@
 ## 2.0.4
 
 1. Initial release
+-->
+```
