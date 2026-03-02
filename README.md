@@ -15,7 +15,7 @@
 
 **Rajio-Sen** is a minimalist, vaporwave-themed terminal radio scanner. It allows you to tune into thousands of radio stations globally directly from your command line. 
 
-This project is a heavily modified hard-fork of the original `radio-active` application. It has been completely rebuilt to bypass abandoned dependencies (such as `pyradios`) in favor of a modern, direct-REST API communication with the Radio-Browser database. The user interface has been redesigned using `rich` to provide a sleek terminal display with bilingual Japanese/English typography and a custom *Luminous Nebula* palette.
+This project is a heavily modified hard-fork of the original `radio-active` application. It has been completely rebuilt to bypass abandoned dependencies in favor of a modern, direct-REST API communication with the Radio-Browser database. The user interface has been redesigned using `rich` to provide a sleek terminal display with bilingual Japanese/English typography and a fitting palette.
 
 ### ＦＥＡＴＵＲＥＳ (特徴)
 
@@ -45,7 +45,7 @@ paru -S rajio-sen
 #### PyPI
 You can also install from the Python repository directly:
 ```bash
-# Using pipx
+# Using pipx 
 pipx install rajio-sen
 ```
 
@@ -81,7 +81,7 @@ rajio --play "Night City"
 
 | Options | Description | Default | Values |
 | :--- | :--- | :--- | :--- |
-| (No Option) | Select a station from menu to play | False | |
+| (No Option) | Select a station from favorites menu to play | False | |
 | `--search`, `-S` | Search station by name | None | |
 | `--play`, `-P` | Play from favorites or direct URL | None | |
 | `--country`, `-C` | Filter stations by country code | False | |
