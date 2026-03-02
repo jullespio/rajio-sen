@@ -42,6 +42,13 @@ yay -S rajio-sen
 paru -S rajio-sen
 ```
 
+#### PyPI
+You can also install from the Python repository directly:
+```bash
+# Using pipx
+pipx install rajio-sen
+```
+
 #### Manual Installation
 ```bash
 # Clone the repository
